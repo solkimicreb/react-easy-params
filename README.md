@@ -1,2 +1,3 @@
-# react-easy-params
-A react helper (WIP)
+# React Easy Params (WIP)
+
+Coming soon ...

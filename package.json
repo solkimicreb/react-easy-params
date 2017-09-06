@@ -8,7 +8,7 @@
     "dist"
   ],
   "scripts": {
-    "test": "karma start --single-run --browsers ChromeHeadless karma.conf.js",
+    "test": "karma start --no-sandbox --single-run --browsers ChromeHeadless karma.conf.js",
     "lint": "standard",
     "lint:fix": "standard --fix",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls",

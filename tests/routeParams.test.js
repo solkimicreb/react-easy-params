@@ -1,6 +1,6 @@
 import { observable } from '@nx-js/observer-util'
 import { expect } from 'chai'
-import { easyParams, routeParams } from '../src'
+import { easyParams, routeParams } from 'react-easy-params'
 
 describe('routeParams', () => {
   it('should throw when the first parameter is not an object', () => {

@@ -1,6 +1,6 @@
 import { observable } from '@nx-js/observer-util'
 import { expect } from 'chai'
-import { easyParams, routeParams } from '../src'
+import { easyParams, routeParams } from 'react-easy-params'
 import { nextTick, nextTask } from './utils'
 
 describe('synchronization priorities', () => {

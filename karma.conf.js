@@ -2,6 +2,11 @@ const resolve = require('rollup-plugin-node-resolve')
 const commonjs = require('rollup-plugin-commonjs')
 const babel = require('rollup-plugin-babel')
 const coverage = require('rollup-plugin-coverage')
+const alias = require('rollup-plugin-alias')
+const path = require('path')
+
+const bundleType = process.env.BUNDLE_TYPE
+const bundlePath = bundleType ? `dist/${bundleType}.js` : 'src/index.js'
 
 module.exports = function (config) {
   config.set({
@@ -19,10 +24,15 @@ module.exports = function (config) {
             'node_modules/chai/index.js': ['expect']
           }
         }),
+        alias({
+          'react-easy-params': path.resolve(bundlePath)
+        }),
         coverage({
           include: ['src/**/*.js']
         }),
-        babel()
+        babel({
+          exclude: 'node_modules/**'
+        })
       ],
       format: 'iife',
       name: 'reactEasyParams',

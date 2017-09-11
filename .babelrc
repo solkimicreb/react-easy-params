@@ -1,8 +1,4 @@
 {
-  "env": {
-    "development": {
-      "presets": ["es2016", "es2017", "stage-0"],
-      "plugins": ["external-helpers", "array-includes"]
-    }
-  }
+  "presets": ["es2016", "es2017", "stage-0"],
+  "plugins": ["external-helpers", "array-includes"]
 }

@@ -1,6 +1,6 @@
 import { observable } from '@nx-js/observer-util'
 import { expect } from 'chai'
-import { easyParams } from '../src'
+import { easyParams } from 'react-easy-params'
 
 describe('easyParams', () => {
   window.x = 12

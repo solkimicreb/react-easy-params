@@ -1,4 +1,4 @@
-import { observable } from '@nx-js/observer-util'
+import { observable, observe } from '@nx-js/observer-util'
 import { expect } from 'chai'
 import { easyParams, routeParams } from 'react-easy-params'
 import { nextTick } from './utils'
@@ -88,5 +88,17 @@ describe('storage synchronization', () => {
     store.name = { first: 'Bob' }
     await nextTick()
     expect(localStorage.getItem('name')).to.equal('{"first":"Bob"}')
+  })
+
+  it('should update the storage in popstate events', async () => {
+    let dummy
+    const person = observable()
+    observe(() => dummy = person.name)
+    easyParams(person, { name: ['storage', 'url'] })
+
+    history.replaceState(undefined, '', '?name=Bob')
+    window.dispatchEvent(new Event('popstate'))
+    await nextTick()
+    expect(dummy).to.equal('Bob')
   })
 })

@@ -27,8 +27,8 @@ export function toWidgetType (prop, allowObjectType) {
 }
 
 function getType (prop) {
-  let type = (typeof prop)
-  if (type === 'object' && (prop instanceof Date)) {
+  let type = typeof prop
+  if (type === 'object' && prop instanceof Date) {
     type = 'date'
   }
   return type

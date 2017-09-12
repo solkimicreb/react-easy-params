@@ -21,21 +21,23 @@ describe('easyParams', () => {
     expect(() => easyParams(observable(), { name: 'invalid' })).to.throw()
     expect(() => easyParams(observable(), { name: undefined })).to.throw()
     expect(() => easyParams(observable(), { name: [] })).to.throw()
-    expect(() => easyParams(observable(), { name: ['history', 'invalid'] })).to.throw()
+    expect(() =>
+      easyParams(observable(), { name: ['history', 'invalid'] })
+    ).to.throw()
     expect(() => easyParams(observable(), { name: 'url' })).to.not.throw()
-    expect(() => easyParams(observable(), { name: ['history'] })).to.not.throw()
-    expect(() => easyParams(observable(), { name: ['url', 'storage'] })).to.not.throw()
+    expect(() =>
+      easyParams(observable(), { name: ['history'] })
+    ).to.not.throw()
+    expect(() =>
+      easyParams(observable(), { name: ['url', 'storage'] })
+    ).to.not.throw()
   })
 
   it('should freeze the passed config object', () => {
     const config = { name: 'url' }
     easyParams(observable(), config)
 
-    expect(() => {
-      config.name = 'history'
-    }).to.throw()
-    expect(() => {
-      config.age = 'storage'
-    }).to.throw()
+    expect(() => (config.name = 'history')).to.throw()
+    expect(() => (config.age = 'storage')).to.throw()
   })
 })

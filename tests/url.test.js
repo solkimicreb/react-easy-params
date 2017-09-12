@@ -1,4 +1,4 @@
-import { observable } from '@nx-js/observer-util'
+import { observable, observe } from '@nx-js/observer-util'
 import { expect } from 'chai'
 import { easyParams, routeParams } from 'react-easy-params'
 import { nextTick } from './utils'
@@ -12,6 +12,15 @@ describe('url synchronization', () => {
     history.replaceState(undefined, '', '?firstName=User')
     const store = observable({})
     easyParams(store, { firstName: 'url', lastName: 'url' })
+    expect(store).to.eql({ firstName: 'User' })
+  })
+
+  it('should synchronize store properties with the url on popstate events', () => {
+    const store = observable()
+    easyParams(store, { firstName: 'url', lastName: 'url' })
+    history.replaceState(undefined, '', '?firstName=User')
+
+    window.dispatchEvent(new Event('popstate'))
     expect(store).to.eql({ firstName: 'User' })
   })
 
@@ -92,5 +101,17 @@ describe('url synchronization', () => {
     store.code = '??=*&'
     await nextTick()
     expect(location.search).to.eql('?code=%3F%3F%3D*%26')
+  })
+
+  it('should trigger external reactions on popstate', async () => {
+    let dummy
+    const person = observable()
+    observe(() => dummy = person.name)
+    easyParams(person, { name: 'url' })
+
+    history.replaceState(undefined, '', '?name=Bob')
+    window.dispatchEvent(new Event('popstate'))
+    await nextTick()
+    expect(dummy).to.equal('Bob')
   })
 })

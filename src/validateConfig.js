@@ -12,7 +12,9 @@ export default function validateConfig (config) {
 
 function validateSyncOptions (key, options) {
   if (!options.length) {
-    throw new Error(`Invalid options for ${key}, it should not be an empty array.`)
+    throw new Error(
+      `Invalid options for ${key}, it should not be an empty array.`
+    )
   }
   for (let option of options) {
     if (!validOptions.has(option)) {

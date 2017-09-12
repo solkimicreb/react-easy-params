@@ -14,7 +14,7 @@ const bundles = [
       input: path.resolve('src/index.js'),
       plugins: [
         resolvePlugin(),
-        babelPlugin(),
+        babelPlugin({ exclude: 'node_modules/**' }),
         externalsPlugin({ dependencies: true, peerDependecies: true })
       ]
     },
@@ -27,7 +27,7 @@ const bundles = [
       input: path.resolve('src/index.js'),
       plugins: [
         resolvePlugin(),
-        babelPlugin(),
+        babelPlugin({ exclude: 'node_modules/**' }),
         externalsPlugin({ dependencies: true, peerDependecies: true })
       ]
     },
@@ -40,7 +40,7 @@ const bundles = [
       input: path.resolve('src/index.js'),
       plugins: [
         resolvePlugin(),
-        babelPlugin(),
+        babelPlugin({ exclude: 'node_modules/**' }),
         externalsPlugin({ dependencies: false, peerDependecies: true })
       ]
     },
@@ -51,7 +51,7 @@ const bundles = [
   }
 ]
 
-async function bundle () {
+async function build () {
   // Clean up the output directory
   await del(path.resolve('dist'))
   fs.mkdirSync(path.resolve('dist'))
@@ -63,8 +63,13 @@ async function bundle () {
     const { code: es6Code } = await bundle.generate(config.output)
     fs.writeFileSync(es6Path, es6Code, 'utf-8')
 
-    const es6MinPath = path.resolve('dist', `${config.output.format}.es6.min.js`)
-    const { code: es6MinCode } = babel.transform(es6Code, { presets: ['minify'] })
+    const es6MinPath = path.resolve(
+      'dist',
+      `${config.output.format}.es6.min.js`
+    )
+    const { code: es6MinCode } = babel.transform(es6Code, {
+      presets: ['minify']
+    })
     fs.writeFileSync(es6MinPath, es6MinCode, 'utf-8')
 
     const es5Path = path.resolve('dist', `${config.output.format}.es5.js`)
@@ -76,11 +81,15 @@ async function bundle () {
     })
     fs.writeFileSync(es5Path, es5Code, 'utf-8')
 
-    const es5MinPath = path.resolve('dist', `${config.output.format}.es5.min.js`)
-    const { code: es5MinCode } = babel.transform(es5Code, { presets: ['minify'] })
+    const es5MinPath = path.resolve(
+      'dist',
+      `${config.output.format}.es5.min.js`
+    )
+    const { code: es5MinCode } = babel.transform(es5Code, {
+      presets: ['minify']
+    })
     fs.writeFileSync(es5MinPath, es5MinCode, 'utf-8')
   }
 }
 
-bundle()
-  .catch(console.log)
+build()

@@ -13,9 +13,8 @@ export function syncStorageWithStore (config, store) {
 }
 
 export function syncStoreWithStorage (config, store) {
-  store = store.$raw
   for (let key in config) {
-    if (config[key].includes('storage') && (key in localStorage)) {
+    if (config[key].includes('storage') && key in localStorage) {
       store[key] = toStoreType(localStorage.getItem(key), store[key])
     }
   }

@@ -1,4 +1,4 @@
-import { observable } from '@nx-js/observer-util'
+import { observable, observe } from '@nx-js/observer-util'
 import { expect } from 'chai'
 import { easyParams, routeParams } from 'react-easy-params'
 import { nextTick, nextRender, nextTask } from './utils'
@@ -12,6 +12,15 @@ describe('history synchronization', () => {
     const store = observable({ firstName: 'Test', lastName: 'User' })
     easyParams(store, { firstName: 'history', lastName: 'history' })
     expect(history.state).to.eql({ firstName: 'Test', lastName: 'User' })
+  })
+
+  it('should synchronize store properties with the history on popstate events', () => {
+    const store = observable()
+    easyParams(store, { firstName: 'history', lastName: 'history' })
+    history.replaceState({ firstName: 'Bob', lastName: 'Smith' }, '', location.pathname)
+
+    window.dispatchEvent(new Event('popstate'))
+    expect(store).to.eql({ firstName: 'Bob', lastName: 'Smith' })
   })
 
   it('should synchronize the history with store properties', async () => {
@@ -127,5 +136,17 @@ describe('history synchronization', () => {
   it('should throw on objects', () => {
     const store = observable({ obj: {} })
     expect(() => easyParams(store, { obj: 'history' })).to.throw()
+  })
+
+  it('should trigger external reactions on popstate', async () => {
+    let dummy
+    const person = observable()
+    observe(() => dummy = person.name)
+    easyParams(person, { name: 'history' })
+
+    history.replaceState({ name: 'Bob' }, '', location.pathname)
+    window.dispatchEvent(new Event('popstate'))
+    await nextTick()
+    expect(dummy).to.equal('Bob')
   })
 })

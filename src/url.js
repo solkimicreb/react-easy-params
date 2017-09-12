@@ -12,10 +12,9 @@ export function syncUrlWithStore (config, store) {
 }
 
 export function syncStoreWithUrl (config, store) {
-  store = store.$raw
   const params = toParams(location.search)
   for (let key in config) {
-    if (config[key].includes('url') && (key in params)) {
+    if (config[key].includes('url') && key in params) {
       store[key] = toStoreType(params[key], store[key])
     }
   }

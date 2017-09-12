@@ -13,18 +13,17 @@ export function syncHistoryWithStore (config, store) {
       }
     }
   }
+  // only add a new history item if some parameters changed
+  // pushState throttles to never add multiple history items between two frames
   if (historyChanged) {
     pushState(params, '', createUrl())
-  } else {
-    history.replaceState(params, '', createUrl())
   }
 }
 
 export function syncStoreWithHistory (config, store) {
-  store = store.$raw
   const params = Object.assign({}, history.state)
   for (let key in config) {
-    if (config[key].includes('history') && (key in params)) {
+    if (config[key].includes('history') && key in params) {
       store[key] = toStoreType(params[key], store[key])
     }
   }

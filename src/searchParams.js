@@ -10,7 +10,10 @@ export function toQuery (params) {
 }
 
 export function toParams (query) {
-  const tokens = query.slice(1).split('&').filter(notEmpty)
+  const tokens = query
+    .slice(1)
+    .split('&')
+    .filter(notEmpty)
   const params = {}
   for (let token of tokens) {
     const keyValue = token.split('=')

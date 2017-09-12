@@ -93,7 +93,7 @@ describe('storage synchronization', () => {
   it('should update the storage in popstate events', async () => {
     let dummy
     const person = observable()
-    observe(() => dummy = person.name)
+    observe(() => (dummy = person.name))
     easyParams(person, { name: ['storage', 'url'] })
 
     history.replaceState(undefined, '', '?name=Bob')

@@ -17,7 +17,11 @@ describe('history synchronization', () => {
   it('should synchronize store properties with the history on popstate events', () => {
     const store = observable()
     easyParams(store, { firstName: 'history', lastName: 'history' })
-    history.replaceState({ firstName: 'Bob', lastName: 'Smith' }, '', location.pathname)
+    history.replaceState(
+      { firstName: 'Bob', lastName: 'Smith' },
+      '',
+      location.pathname
+    )
 
     window.dispatchEvent(new Event('popstate'))
     expect(store).to.eql({ firstName: 'Bob', lastName: 'Smith' })
@@ -141,7 +145,7 @@ describe('history synchronization', () => {
   it('should trigger external reactions on popstate', async () => {
     let dummy
     const person = observable()
-    observe(() => dummy = person.name)
+    observe(() => (dummy = person.name))
     easyParams(person, { name: 'history' })
 
     history.replaceState({ name: 'Bob' }, '', location.pathname)

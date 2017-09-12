@@ -106,7 +106,7 @@ describe('url synchronization', () => {
   it('should trigger external reactions on popstate', async () => {
     let dummy
     const person = observable()
-    observe(() => dummy = person.name)
+    observe(() => (dummy = person.name))
     easyParams(person, { name: 'url' })
 
     history.replaceState(undefined, '', '?name=Bob')

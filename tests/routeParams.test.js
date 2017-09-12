@@ -25,7 +25,7 @@ describe('routeParams', () => {
   it('should trigger external reactions', async () => {
     let dummy
     const person = observable()
-    observe(() => dummy = person.name)
+    observe(() => (dummy = person.name))
     easyParams(person, { name: 'url' })
 
     routeParams({ name: 'Bob' })

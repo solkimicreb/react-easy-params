@@ -5,8 +5,8 @@ import { nextTick } from './utils'
 
 describe('synchronization priorities', () => {
   beforeEach(() => {
-    localStorage.clear()
     history.replaceState(undefined, '', location.pathname)
+    localStorage.clear()
   })
 
   it('should favour url before history before storage on page init', async () => {

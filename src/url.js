@@ -21,5 +21,5 @@ export function syncStoreWithUrl (config, store) {
 }
 
 function createUrl (params) {
-  return location.pathname + toQuery(params)
+  return location.pathname + toQuery(params) + location.hash
 }

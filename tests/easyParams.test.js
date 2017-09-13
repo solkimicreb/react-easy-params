@@ -3,7 +3,6 @@ import { expect } from 'chai'
 import { easyParams } from 'react-easy-params'
 
 describe('easyParams', () => {
-  window.x = 12
   it('should throw when the first parameter is not an observable', () => {
     expect(() => easyParams({}, {})).to.throw(TypeError)
     expect(() => easyParams(null, {})).to.throw(TypeError)

@@ -16,7 +16,7 @@ export function syncHistoryWithStore (config, store) {
   // only add a new history item if some parameters changed
   // pushState throttles to never add multiple history items between two frames
   if (historyChanged) {
-    pushState(params, '', createUrl())
+    pushState(params, '')
   }
 }
 
@@ -27,8 +27,4 @@ export function syncStoreWithHistory (config, store) {
       store[key] = toStoreType(params[key], store[key])
     }
   }
-}
-
-function createUrl () {
-  return location.pathname + location.search + location.hash
 }

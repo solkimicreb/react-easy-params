@@ -4,8 +4,9 @@ import { easyParams, routeParams } from 'react-easy-params'
 import { nextTick } from './utils'
 
 describe('url synchronization', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     history.replaceState(undefined, '', location.pathname)
+    await nextTick()
   })
 
   it('should synchronize store properties with the url on store definition', () => {

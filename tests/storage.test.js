@@ -4,8 +4,9 @@ import { easyParams, routeParams } from 'react-easy-params'
 import { nextTick } from './utils'
 
 describe('storage synchronization', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     localStorage.clear()
+    await nextTick()
   })
 
   it('should synchronize store properties with the storage on store definition', () => {

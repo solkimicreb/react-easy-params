@@ -4,8 +4,9 @@ import { easyParams, routeParams } from 'react-easy-params'
 import { nextTick, nextRender } from './utils'
 
 describe('history synchronization', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     history.replaceState(undefined, '', location.pathname)
+    await nextRender()
   })
 
   it('should synchronize store properties with the history on store definition', () => {
@@ -54,23 +55,22 @@ describe('history synchronization', () => {
   it('should add new history items when neccessary', async () => {
     const startLength = history.length
 
-    await nextRender()
     const store = observable({ firstName: 'Test' })
     easyParams(store, { firstName: 'history', lastName: 'history' })
     expect(history.state).to.eql({ firstName: 'Test' })
-    expect(history.length).to.equal(startLength + 1)
+    expect(history.length).to.equal(startLength)
 
     await nextRender()
     store.lastName = 'User'
     await nextTick()
     expect(history.state).to.eql({ firstName: 'Test', lastName: 'User' })
-    expect(history.length).to.equal(startLength + 2)
+    expect(history.length).to.equal(startLength + 1)
 
     await nextRender()
     store.firstName = 'Other'
     await nextTick()
     expect(history.state).to.eql({ firstName: 'Other', lastName: 'User' })
-    expect(history.length).to.equal(startLength + 3)
+    expect(history.length).to.equal(startLength + 2)
   })
 
   it('should not add multiple history items between two frames', async () => {
@@ -84,12 +84,12 @@ describe('history synchronization', () => {
     store.lastName = 'User'
     await nextTick()
     expect(history.state).to.eql({ firstName: 'Test', lastName: 'User' })
-    expect(history.length).to.equal(startLength)
+    expect(history.length).to.equal(startLength + 1)
 
     store.firstName = 'Other'
     await nextTick()
     expect(history.state).to.eql({ firstName: 'Other', lastName: 'User' })
-    expect(history.length).to.equal(startLength)
+    expect(history.length).to.equal(startLength + 1)
   })
 
   it('should cast dates', async () => {

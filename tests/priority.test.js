@@ -4,9 +4,10 @@ import { easyParams, routeParams } from 'react-easy-params'
 import { nextTick } from './utils'
 
 describe('synchronization priorities', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     history.replaceState(undefined, '', location.pathname)
     localStorage.clear()
+    await nextTick()
   })
 
   it('should favour url before history before storage on page init', async () => {

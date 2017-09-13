@@ -43,12 +43,14 @@ function sync (config, store) {
   syncStoreWithHistory(config, store)
   syncStoreWithUrl(config, store)
 
+  let initing = true
   // these run now once and will automatically rerun when the store changes
   synchronizers.set(store, {
     url: observe(() => syncUrlWithStore(config, store)),
-    history: observe(() => syncHistoryWithStore(config, store)),
+    history: observe(() => syncHistoryWithStore(config, store, initing)),
     storage: observe(() => syncStorageWithStore(config, store))
   })
+  initing = false
 }
 
 window.addEventListener('popstate', () => {

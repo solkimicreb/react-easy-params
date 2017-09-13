@@ -1,7 +1,7 @@
 import pushState from 'history-throttler'
 import { toStoreType, toWidgetType } from './types'
 
-export function syncHistoryWithStore (config, store) {
+export function syncHistoryWithStore (config, store, initing) {
   let historyChanged = false
   const params = Object.assign({}, history.state)
   for (let key in config) {
@@ -13,9 +13,12 @@ export function syncHistoryWithStore (config, store) {
       }
     }
   }
-  // only add a new history item if some parameters changed
-  // pushState throttles to never add multiple history items between two frames
-  if (historyChanged) {
+
+  // only add a new history item if some parameters changed and if the store is already inited
+  if (initing) {
+    history.replaceState(params, '')
+  } else if (historyChanged) {
+    // pushState throttles to never add multiple history items between two frames
     pushState(params, '')
   }
 }

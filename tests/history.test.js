@@ -1,7 +1,7 @@
 import { observable, observe } from '@nx-js/observer-util'
 import { expect } from 'chai'
 import { easyParams, routeParams } from 'react-easy-params'
-import { nextTick, nextRender, nextTask } from './utils'
+import { nextTick, nextRender } from './utils'
 
 describe('history synchronization', () => {
   beforeEach(() => {
@@ -90,38 +90,6 @@ describe('history synchronization', () => {
     await nextTick()
     expect(history.state).to.eql({ firstName: 'Other', lastName: 'User' })
     expect(history.length).to.equal(startLength)
-  })
-
-  it('should syncronize on history navigation', async () => {
-    const store = observable({ firstName: 'Test' })
-    easyParams(store, { firstName: 'history', lastName: 'history' })
-    expect(history.state).to.eql({ firstName: 'Test' })
-
-    await nextRender()
-    store.lastName = 'User'
-    await nextTick()
-    expect(history.state).to.eql({ firstName: 'Test', lastName: 'User' })
-
-    await nextRender()
-    store.firstName = 'Other'
-    await nextTick()
-    expect(history.state).to.eql({ firstName: 'Other', lastName: 'User' })
-
-    history.back()
-    await nextTask()
-    expect(history.state).to.eql({ firstName: 'Test', lastName: 'User' })
-
-    history.back()
-    await nextTask()
-    expect(history.state).to.eql({ firstName: 'Test' })
-
-    history.forward()
-    await nextTask()
-    expect(history.state).to.eql({ firstName: 'Test', lastName: 'User' })
-
-    history.forward()
-    await nextTask()
-    expect(history.state).to.eql({ firstName: 'Other', lastName: 'User' })
   })
 
   it('should cast dates', async () => {

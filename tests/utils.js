@@ -5,7 +5,3 @@ export { nextTick }
 export function nextRender () {
   return new Promise(requestAnimationFrame)
 }
-
-export function nextTask () {
-  return new Promise(setTimeout)
-}

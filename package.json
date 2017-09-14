@@ -1,7 +1,7 @@
 {
   "name": "react-easy-params",
   "version": "1.0.0",
-  "description": "A simple fix for unwanted duplicate history entries on the frontend",
+  "description": "Automatic two-way synchronization between the state, the URL, the browser history and the LocalStorage.",
   "main": "dist/cjs.es5.js",
   "module": "dist/es.es5.js",
   "files": [
@@ -24,20 +24,22 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:solkimicreb/history-throttler.git"
+    "url": "git@github.com:solkimicreb/react-easy-params.git"
   },
   "bugs": {
-    "url": "https://github.com/solkimicreb/history-throttler/issues"
+    "url": "https://github.com/solkimicreb/react-easy-params/issues"
   },
-  "homepage": "https://github.com/solkimicreb/history-throttler#readme",
+  "homepage": "https://github.com/solkimicreb/react-easy-params#readme",
   "license": "MIT",
   "keywords": [
-    "frontend",
-    "client",
+    "react",
+    "state",
+    "url",
     "history",
-    "routing",
-    "navigation",
-    "throttle"
+    "localstorage",
+    "reactivity",
+    "automatic",
+    "binding"
   ],
   "dependencies": {
     "history-throttler": "^1.1.0"

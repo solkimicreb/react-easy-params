@@ -46,16 +46,16 @@ function sync (config, store) {
   let initing = true
   // these run now once and will automatically rerun when the store changes
   synchronizers.set(store, {
-    url: observe(() => syncUrlWithStore(config, store)),
+    // history sync must come before url sync as it can push a new history item
+    // the new item must be pushed asap, so that the later replaceStates mutate it rather than the old one
+    storage: observe(() => syncStorageWithStore(config, store)),
     history: observe(() => syncHistoryWithStore(config, store, initing)),
-    storage: observe(() => syncStorageWithStore(config, store))
+    url: observe(() => syncUrlWithStore(config, store))
   })
   initing = false
 }
 
 window.addEventListener('popstate', () => {
-  // history sync must be the first as it can push a new history item
-  // the new item must be pushed asap, so that the later replaceStates mutate it rather than the old one
   stores.forEach(syncStoreWithHistory)
   stores.forEach(syncStoreWithUrl)
 

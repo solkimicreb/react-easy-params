@@ -41,6 +41,10 @@ describe('url synchronization', () => {
     store.firstName = undefined
     await nextTick()
     expect(location.search).to.equal('?lastName=User')
+
+    store.lastName = undefined
+    await nextTick()
+    expect(location.search).to.equal('')
   })
 
   it('should synchronize store properties and the url on param routing', async () => {

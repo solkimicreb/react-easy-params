@@ -7,7 +7,7 @@ describe('routeParams', () => {
   beforeEach(async () => {
     await nextTick()
   })
-  
+
   it('should throw when the first parameter is not an object', () => {
     expect(() => routeParams(undefined)).to.throw(TypeError)
     expect(() => routeParams(null, {})).to.throw(TypeError)

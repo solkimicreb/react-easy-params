@@ -3,12 +3,22 @@ import { toQuery, toParams } from './searchParams'
 
 export function syncUrlWithStore (config, store) {
   const params = toParams(location.search)
+  let paramsChanged = false
+
   for (let key in config) {
     if (config[key].includes('url')) {
-      params[key] = toWidgetType(store[key], false)
+      const newValue = toWidgetType(store[key], false)
+      if (params[key] !== newValue) {
+        params[key] = newValue
+        paramsChanged = true
+      }
     }
   }
-  history.replaceState(history.state, '', createUrl(params))
+
+  // replaceState is expensive, only do it when it is necessary
+  if (paramsChanged) {
+    history.replaceState(history.state, '', createUrl(params))
+  }
 }
 
 export function syncStoreWithUrl (config, store) {

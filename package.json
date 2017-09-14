@@ -8,7 +8,7 @@
     "dist"
   ],
   "scripts": {
-    "test": "karma start karma.conf.js",
+    "test": "node ./scripts/test.js",
     "test-builds": "node ./scripts/testBuilds.js",
     "lint": "standard",
     "lint-fix": "prettier --ignore-path '.gitignore' --write '**/*.js' && standard --fix",

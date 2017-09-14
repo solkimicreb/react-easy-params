@@ -46,6 +46,10 @@ const store = easyStore({
   }
 })
 
+// store.filter is two-way synchronized with the URL query string
+// and adds a new history item whenever it changes
+// store.all is synchronized with the LocalStorage,
+// so the todos are kept between page reloads
 easyParams(store, {
   filter: ['url', 'history'],
   all: ['storage']

@@ -10474,6 +10474,10 @@ const store = Object(__WEBPACK_IMPORTED_MODULE_0_react_easy_state__["b" /* easyS
   }
 });
 
+// store.filter is two-way synchronized with the URL query string
+// and adds a new history item whenever it changes
+// store.all is synchronized with the LocalStorage,
+// so the todos are kept between page reloads
 Object(__WEBPACK_IMPORTED_MODULE_1_react_easy_params__["a" /* easyParams */])(store, {
   filter: ['url', 'history'],
   all: ['storage']
@@ -23171,17 +23175,19 @@ function sync(config, store) {
   Object(__WEBPACK_IMPORTED_MODULE_2__history__["b" /* syncStoreWithHistory */])(config, store);
   Object(__WEBPACK_IMPORTED_MODULE_1__url__["a" /* syncStoreWithUrl */])(config, store);
 
+  let initing = true;
   // these run now once and will automatically rerun when the store changes
   synchronizers.set(store, {
-    url: Object(__WEBPACK_IMPORTED_MODULE_0__nx_js_observer_util__["c" /* observe */])(() => Object(__WEBPACK_IMPORTED_MODULE_1__url__["b" /* syncUrlWithStore */])(config, store)),
-    history: Object(__WEBPACK_IMPORTED_MODULE_0__nx_js_observer_util__["c" /* observe */])(() => Object(__WEBPACK_IMPORTED_MODULE_2__history__["a" /* syncHistoryWithStore */])(config, store)),
-    storage: Object(__WEBPACK_IMPORTED_MODULE_0__nx_js_observer_util__["c" /* observe */])(() => Object(__WEBPACK_IMPORTED_MODULE_3__storage__["a" /* syncStorageWithStore */])(config, store))
+    // history sync must come before url sync as it can push a new history item
+    // the new item must be pushed asap, so that the later replaceStates mutate it rather than the old one
+    storage: Object(__WEBPACK_IMPORTED_MODULE_0__nx_js_observer_util__["c" /* observe */])(() => Object(__WEBPACK_IMPORTED_MODULE_3__storage__["a" /* syncStorageWithStore */])(config, store)),
+    history: Object(__WEBPACK_IMPORTED_MODULE_0__nx_js_observer_util__["c" /* observe */])(() => Object(__WEBPACK_IMPORTED_MODULE_2__history__["a" /* syncHistoryWithStore */])(config, store, initing)),
+    url: Object(__WEBPACK_IMPORTED_MODULE_0__nx_js_observer_util__["c" /* observe */])(() => Object(__WEBPACK_IMPORTED_MODULE_1__url__["b" /* syncUrlWithStore */])(config, store))
   });
+  initing = false;
 }
 
 window.addEventListener('popstate', () => {
-  // history sync must be the first as it can push a new history item
-  // the new item must be pushed asap, so that the later replaceStates mutate it rather than the old one
   stores.forEach(__WEBPACK_IMPORTED_MODULE_2__history__["b" /* syncStoreWithHistory */]);
   stores.forEach(__WEBPACK_IMPORTED_MODULE_1__url__["a" /* syncStoreWithUrl */]);
 
@@ -23211,12 +23217,22 @@ function unqueuePopstateSynchronizer(synchronizer) {
 
 function syncUrlWithStore(config, store) {
   const params = Object(__WEBPACK_IMPORTED_MODULE_1__searchParams__["a" /* toParams */])(location.search);
+  let paramsChanged = false;
+
   for (let key in config) {
     if (config[key].indexOf('url') !== -1) {
-      params[key] = Object(__WEBPACK_IMPORTED_MODULE_0__types__["b" /* toWidgetType */])(store[key], false);
+      const newValue = Object(__WEBPACK_IMPORTED_MODULE_0__types__["b" /* toWidgetType */])(store[key], false);
+      if (params[key] !== newValue) {
+        params[key] = newValue;
+        paramsChanged = true;
+      }
     }
   }
-  history.replaceState(history.state, '', createUrl(params));
+
+  // replaceState is expensive, only do it when it is necessary
+  if (paramsChanged) {
+    history.replaceState(history.state, '', createUrl(params));
+  }
 }
 
 function syncStoreWithUrl(config, store) {
@@ -23229,7 +23245,7 @@ function syncStoreWithUrl(config, store) {
 }
 
 function createUrl(params) {
-  return location.pathname + Object(__WEBPACK_IMPORTED_MODULE_1__searchParams__["b" /* toQuery */])(params);
+  return location.pathname + Object(__WEBPACK_IMPORTED_MODULE_1__searchParams__["b" /* toQuery */])(params) + location.hash;
 }
 
 /***/ }),
@@ -23272,26 +23288,31 @@ function notEmpty(string) {
 /* harmony export (immutable) */ __webpack_exports__["a"] = syncHistoryWithStore;
 /* harmony export (immutable) */ __webpack_exports__["b"] = syncStoreWithHistory;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_history_throttler__ = __webpack_require__(195);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_history_throttler___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_history_throttler__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__types__ = __webpack_require__(51);
 
 
 
-function syncHistoryWithStore(config, store) {
-  let historyChanged = false;
+function syncHistoryWithStore(config, store, initing) {
   const params = Object.assign({}, history.state);
+  let paramsChanged = false;
+
   for (let key in config) {
     if (config[key].indexOf('history') !== -1) {
       const newValue = Object(__WEBPACK_IMPORTED_MODULE_1__types__["b" /* toWidgetType */])(store[key], false);
       if (params[key] !== newValue) {
         params[key] = newValue;
-        historyChanged = true;
+        paramsChanged = true;
       }
     }
   }
-  // only add a new history item if some parameters changed
-  // pushState throttles to never add multiple history items between two frames
-  if (historyChanged) {
-    Object(__WEBPACK_IMPORTED_MODULE_0_history_throttler__["a" /* default */])(params, '', createUrl());
+
+  // only add a new history item if some parameters changed and if the store is already inited
+  if (initing) {
+    history.replaceState(params, '');
+  } else if (paramsChanged) {
+    // pushState throttles to never add multiple history items between two frames
+    Object(__WEBPACK_IMPORTED_MODULE_0_history_throttler__["default"])(params, '');
   }
 }
 
@@ -23304,38 +23325,11 @@ function syncStoreWithHistory(config, store) {
   }
 }
 
-function createUrl() {
-  return location.pathname + location.search + location.hash;
-}
-
 /***/ }),
 /* 195 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports) {
 
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = pushState;
-const originalPushState = history.pushState;
-let statePushedInCurrentTick = false;
-
-function pushState() {
-  if (!statePushedInCurrentTick && document.readyState === 'complete') {
-    // allow pushState if it is the first one since the last paint and the document is loaded
-    originalPushState.apply(history, arguments);
-    flagOn();
-    requestAnimationFrame(flagOff);
-  } else {
-    // replace it with replaceState if it is not the first one
-    history.replaceState.apply(history, arguments);
-  }
-}
-
-function flagOn() {
-  statePushedInCurrentTick = true;
-}
-
-function flagOff() {
-  statePushedInCurrentTick = false;
-}
+throw new Error("Module build failed: Error: ENOENT: no such file or directory, open '/Users/miklosbertalan/history-throttler/src/throttleHistory.js'");
 
 /***/ }),
 /* 196 */

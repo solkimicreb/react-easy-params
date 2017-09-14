@@ -23288,7 +23288,6 @@ function notEmpty(string) {
 /* harmony export (immutable) */ __webpack_exports__["a"] = syncHistoryWithStore;
 /* harmony export (immutable) */ __webpack_exports__["b"] = syncStoreWithHistory;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_history_throttler__ = __webpack_require__(195);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_history_throttler___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_history_throttler__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__types__ = __webpack_require__(51);
 
 
@@ -23312,7 +23311,7 @@ function syncHistoryWithStore(config, store, initing) {
     history.replaceState(params, '');
   } else if (paramsChanged) {
     // pushState throttles to never add multiple history items between two frames
-    Object(__WEBPACK_IMPORTED_MODULE_0_history_throttler__["default"])(params, '');
+    Object(__WEBPACK_IMPORTED_MODULE_0_history_throttler__["a" /* default */])(params, '');
   }
 }
 
@@ -23327,9 +23326,33 @@ function syncStoreWithHistory(config, store) {
 
 /***/ }),
 /* 195 */
-/***/ (function(module, exports) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-throw new Error("Module build failed: Error: ENOENT: no such file or directory, open '/Users/miklosbertalan/history-throttler/src/throttleHistory.js'");
+"use strict";
+var originalPushState = history.pushState;
+var statePushedInCurrentTick = false;
+
+function pushState() {
+  if (!statePushedInCurrentTick && document.readyState === 'complete') {
+    // allow pushState if it is the first one since the last paint and the document is loaded
+    originalPushState.apply(history, arguments);
+    flagOn();
+    requestAnimationFrame(flagOff);
+  } else {
+    // replace it with replaceState if it is not the first one
+    history.replaceState.apply(history, arguments);
+  }
+}
+
+function flagOn() {
+  statePushedInCurrentTick = true;
+}
+
+function flagOff() {
+  statePushedInCurrentTick = false;
+}
+
+/* harmony default export */ __webpack_exports__["a"] = (pushState);
 
 /***/ }),
 /* 196 */

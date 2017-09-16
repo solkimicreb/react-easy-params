@@ -37,6 +37,25 @@ export function routeParams (params) {
   })
 }
 
+export function getParams (keys) {
+  if (!Array.isArray(keys)) {
+    throw new TypeError('The first argument must be a an array of keys.')
+  }
+
+  const params = {}
+
+  // fetch the params for the given keys from all the stores
+  // and merge them into a single params object
+  stores.forEach((config, store) => {
+    for (let key of config.keys) {
+      if (keys.includes(key)) {
+        params[key] = store[key]
+      }
+    }
+  })
+  return params
+}
+
 function sync (config, store) {
   // init the store based on the localStorage/url/history
   syncStoreWithStorage(config, store)

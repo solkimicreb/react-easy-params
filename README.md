@@ -14,6 +14,7 @@
 * [Usage](#usage)
   + [easyParams](#easyparams)
   + [routeParams](#routeparams)
+  + [getParams](#getparams)
 * [Examples with live demos](#examples-with-live-demos)
 * [Platform support](#platform-support)
 * [Alternative builds](#alternative-builds)
@@ -36,6 +37,8 @@ Easy Params consists of two functions:
 - `easyParams` sets up two-way synchronization between your state stores and the URL, browser history and LocalStorage.
 
 - `routeParams` replaces the current parameters with new ones and updates your state stores, the URL, the browser history and the LocalStorage to reflect this.
+
+- `getParams` collects the current parameters from the state stores for the passed parameter keys.
 
 ### easyParams
 
@@ -119,15 +122,12 @@ import { easyParams, routeParams } from 'react-easy-params'
 const owner = easyStore({
   name: 'Bob'
 })
-
 const dog = easyStore({
   breed: 'Bulldog'
 })
-
 easyParams(owner, {
   name: ['url', 'history']
 })
-
 easyParams(dog, {
   breed: 'url'
 })
@@ -141,7 +141,35 @@ routeParams({
 })
 ```
 
-This is a low level function, you probably won't need to use it for your apps.
+This is a low level function, you probably won't need to use it in your apps.
+
+### getParams
+
+`const params = getParams(array)` collects the parameters from the state stores for the passed array of keys and merges them in a single object.
+
+```js
+import { easyStore } from 'react-easy-state'
+import { easyParams, getParams } from 'react-easy-params'
+
+const owner = easyStore({
+  name: 'Bob'
+})
+const dog = easyStore({
+  breed: 'Bulldog'
+})
+
+easyParams(owner, {
+  name: ['url', 'history']
+})
+easyParams(dog, {
+  breed: 'url'
+})
+
+// this returns { owner: 'Bob', breed: 'Bulldog' }
+const params = getParams(['owner', 'breed'])
+```
+
+This is a low level function, you probably won't need to use it in your apps.
 
 ## Examples with live demos
 

@@ -23127,11 +23127,12 @@ class TodoItem extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = easyParams;
 /* unused harmony export routeParams */
+/* unused harmony export getParams */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__nx_js_observer_util__ = __webpack_require__(85);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__url__ = __webpack_require__(192);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__history__ = __webpack_require__(194);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__storage__ = __webpack_require__(196);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__validateConfig__ = __webpack_require__(197);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__setupConfig__ = __webpack_require__(197);
 
 
 
@@ -23148,7 +23149,7 @@ function easyParams(store, config) {
   if (typeof config !== 'object' || config === null) {
     throw new TypeError('The second argument must be a config object.');
   }
-  Object(__WEBPACK_IMPORTED_MODULE_4__validateConfig__["a" /* default */])(config);
+  config = Object(__WEBPACK_IMPORTED_MODULE_4__setupConfig__["a" /* default */])(config);
   stores.set(store, config);
   sync(config, store);
 }
@@ -23161,12 +23162,31 @@ function routeParams(params) {
   // distibute the passed params between the stores based on their config keys
   // the url/history/localStorage will update automatically because of the reactions
   stores.forEach((config, store) => {
-    for (let key in config) {
+    for (let key of config.keys) {
       if (key in params) {
         store[key] = params[key];
       }
     }
   });
+}
+
+function getParams(keys) {
+  if (!Array.isArray(keys)) {
+    throw new TypeError('The first argument must be a an array of keys.');
+  }
+
+  const params = {};
+
+  // fetch the params for the given keys from all the stores
+  // and merge them into a single params object
+  stores.forEach((config, store) => {
+    for (let key of config.keys) {
+      if (keys.indexOf(key) !== -1) {
+        params[key] = store[key];
+      }
+    }
+  });
+  return params;
 }
 
 function sync(config, store) {
@@ -23219,13 +23239,11 @@ function syncUrlWithStore(config, store) {
   const params = Object(__WEBPACK_IMPORTED_MODULE_1__searchParams__["a" /* toParams */])(location.search);
   let paramsChanged = false;
 
-  for (let key in config) {
-    if (config[key].indexOf('url') !== -1) {
-      const newValue = Object(__WEBPACK_IMPORTED_MODULE_0__types__["b" /* toWidgetType */])(store[key], false);
-      if (params[key] !== newValue) {
-        params[key] = newValue;
-        paramsChanged = true;
-      }
+  for (let key of config.url) {
+    const newValue = Object(__WEBPACK_IMPORTED_MODULE_0__types__["b" /* toWidgetType */])(store[key], false);
+    if (params[key] !== newValue) {
+      params[key] = newValue;
+      paramsChanged = true;
     }
   }
 
@@ -23237,8 +23255,8 @@ function syncUrlWithStore(config, store) {
 
 function syncStoreWithUrl(config, store) {
   const params = Object(__WEBPACK_IMPORTED_MODULE_1__searchParams__["a" /* toParams */])(location.search);
-  for (let key in config) {
-    if (config[key].indexOf('url') !== -1 && key in params) {
+  for (let key of config.url) {
+    if (key in params) {
       store[key] = Object(__WEBPACK_IMPORTED_MODULE_0__types__["a" /* toStoreType */])(params[key], store[key]);
     }
   }
@@ -23296,13 +23314,11 @@ function syncHistoryWithStore(config, store, initing) {
   const params = Object.assign({}, history.state);
   let paramsChanged = false;
 
-  for (let key in config) {
-    if (config[key].indexOf('history') !== -1) {
-      const newValue = Object(__WEBPACK_IMPORTED_MODULE_1__types__["b" /* toWidgetType */])(store[key], false);
-      if (params[key] !== newValue) {
-        params[key] = newValue;
-        paramsChanged = true;
-      }
+  for (let key of config.history) {
+    const newValue = Object(__WEBPACK_IMPORTED_MODULE_1__types__["b" /* toWidgetType */])(store[key], false);
+    if (params[key] !== newValue) {
+      params[key] = newValue;
+      paramsChanged = true;
     }
   }
 
@@ -23317,8 +23333,8 @@ function syncHistoryWithStore(config, store, initing) {
 
 function syncStoreWithHistory(config, store) {
   const params = Object.assign({}, history.state);
-  for (let key in config) {
-    if (config[key].indexOf('history') !== -1 && key in params) {
+  for (let key of config.history) {
+    if (key in params) {
       store[key] = Object(__WEBPACK_IMPORTED_MODULE_1__types__["a" /* toStoreType */])(params[key], store[key]);
     }
   }
@@ -23365,20 +23381,18 @@ function flagOff() {
 
 
 function syncStorageWithStore(config, store) {
-  for (let key in config) {
-    if (config[key].indexOf('storage') !== -1) {
-      if (store[key] === undefined) {
-        localStorage.removeItem(key);
-      } else {
-        localStorage.setItem(key, Object(__WEBPACK_IMPORTED_MODULE_0__types__["b" /* toWidgetType */])(store[key], true));
-      }
+  for (let key of config.storage) {
+    if (store[key] === undefined) {
+      localStorage.removeItem(key);
+    } else {
+      localStorage.setItem(key, Object(__WEBPACK_IMPORTED_MODULE_0__types__["b" /* toWidgetType */])(store[key], true));
     }
   }
 }
 
 function syncStoreWithStorage(config, store) {
-  for (let key in config) {
-    if (config[key].indexOf('storage') !== -1 && key in localStorage) {
+  for (let key of config.storage) {
+    if (key in localStorage) {
       store[key] = Object(__WEBPACK_IMPORTED_MODULE_0__types__["a" /* toStoreType */])(localStorage.getItem(key), store[key]);
     }
   }
@@ -23389,20 +23403,26 @@ function syncStoreWithStorage(config, store) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = validateConfig;
+/* harmony export (immutable) */ __webpack_exports__["a"] = setupConfig;
 const validOptions = new Set(['url', 'history', 'storage']);
 
-function validateConfig(config) {
+function setupConfig(config) {
+  const result = {
+    url: [],
+    history: [],
+    storage: [],
+    keys: []
+  };
+
   for (let key in config) {
     let syncOptions = config[key];
     syncOptions = Array.isArray(syncOptions) ? syncOptions : [syncOptions];
-    validateSyncOptions(key, syncOptions);
-    config[key] = syncOptions;
+    setupSyncOptions(key, syncOptions, result);
   }
-  Object.freeze(config);
+  return result;
 }
 
-function validateSyncOptions(key, options) {
+function setupSyncOptions(key, options, result) {
   if (!options.length) {
     throw new Error(`Invalid options for ${key}, it should not be an empty array.`);
   }
@@ -23410,6 +23430,8 @@ function validateSyncOptions(key, options) {
     if (!validOptions.has(option)) {
       throw new Error(`'${options}' is not a valid option for ${key}.`);
     }
+    result[option].push(key);
+    result.keys.push(key);
   }
 }
 

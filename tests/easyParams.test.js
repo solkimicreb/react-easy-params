@@ -31,12 +31,4 @@ describe('easyParams', () => {
       easyParams(observable(), { name: ['url', 'storage'] })
     ).to.not.throw()
   })
-
-  it('should freeze the passed config object', () => {
-    const config = { name: 'url' }
-    easyParams(observable(), config)
-
-    expect(() => (config.name = 'history')).to.throw()
-    expect(() => (config.age = 'storage')).to.throw()
-  })
 })

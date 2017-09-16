@@ -1,16 +1,22 @@
 const validOptions = new Set(['url', 'history', 'storage'])
 
-export default function validateConfig (config) {
+export default function setupConfig (config) {
+  const result = {
+    url: [],
+    history: [],
+    storage: [],
+    keys: []
+  }
+
   for (let key in config) {
     let syncOptions = config[key]
     syncOptions = Array.isArray(syncOptions) ? syncOptions : [syncOptions]
-    validateSyncOptions(key, syncOptions)
-    config[key] = syncOptions
+    setupSyncOptions(key, syncOptions, result)
   }
-  Object.freeze(config)
+  return result
 }
 
-function validateSyncOptions (key, options) {
+function setupSyncOptions (key, options, result) {
   if (!options.length) {
     throw new Error(
       `Invalid options for ${key}, it should not be an empty array.`
@@ -20,5 +26,7 @@ function validateSyncOptions (key, options) {
     if (!validOptions.has(option)) {
       throw new Error(`'${options}' is not a valid option for ${key}.`)
     }
+    result[option].push(key)
+    result.keys.push(key)
   }
 }

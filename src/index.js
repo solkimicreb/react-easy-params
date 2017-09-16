@@ -2,7 +2,7 @@ import { isObservable, observe, unqueue } from '@nx-js/observer-util'
 import { syncStoreWithUrl, syncUrlWithStore } from './url'
 import { syncStoreWithHistory, syncHistoryWithStore } from './history'
 import { syncStoreWithStorage, syncStorageWithStore } from './storage'
-import validateConfig from './validateConfig'
+import setupConfig from './setupConfig'
 
 const stores = new Map()
 const synchronizers = new Map()
@@ -16,7 +16,7 @@ export function easyParams (store, config) {
   if (typeof config !== 'object' || config === null) {
     throw new TypeError('The second argument must be a config object.')
   }
-  validateConfig(config)
+  config = setupConfig(config)
   stores.set(store, config)
   sync(config, store)
 }
@@ -29,7 +29,7 @@ export function routeParams (params) {
   // distibute the passed params between the stores based on their config keys
   // the url/history/localStorage will update automatically because of the reactions
   stores.forEach((config, store) => {
-    for (let key in config) {
+    for (let key of config.keys) {
       if (key in params) {
         store[key] = params[key]
       }

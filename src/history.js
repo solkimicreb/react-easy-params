@@ -5,13 +5,11 @@ export function syncHistoryWithStore (config, store, initing) {
   const params = Object.assign({}, history.state)
   let paramsChanged = false
 
-  for (let key in config) {
-    if (config[key].includes('history')) {
-      const newValue = toWidgetType(store[key], false)
-      if (params[key] !== newValue) {
-        params[key] = newValue
-        paramsChanged = true
-      }
+  for (let key of config.history) {
+    const newValue = toWidgetType(store[key], false)
+    if (params[key] !== newValue) {
+      params[key] = newValue
+      paramsChanged = true
     }
   }
 
@@ -26,8 +24,8 @@ export function syncHistoryWithStore (config, store, initing) {
 
 export function syncStoreWithHistory (config, store) {
   const params = Object.assign({}, history.state)
-  for (let key in config) {
-    if (config[key].includes('history') && key in params) {
+  for (let key of config.history) {
+    if (key in params) {
       store[key] = toStoreType(params[key], store[key])
     }
   }

@@ -27,6 +27,6 @@ function setupSyncOptions (key, options, result) {
       throw new Error(`'${options}' is not a valid option for ${key}.`)
     }
     result[option].push(key)
-    result.keys.push(key)
   }
+  result.keys.push(key)
 }

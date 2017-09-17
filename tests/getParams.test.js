@@ -4,44 +4,30 @@ import { easyParams, getParams } from 'react-easy-params'
 import { nextTick } from './utils'
 
 describe('getParams', () => {
+  let nameStore, emailStore
+
+  before(() => {
+    nameStore = observable({ name: 'Bob' })
+    emailStore = observable({ email: 'bob@gmail.com' })
+    easyParams(nameStore, { name: 'storage' })
+    easyParams(emailStore, { email: 'storage' })
+  })
+
   beforeEach(async () => {
     await nextTick()
   })
 
-  it('should throw when the first parameter is not an array', () => {
-    expect(() => getParams()).to.throw(TypeError)
-    expect(() => getParams({})).to.throw(TypeError)
-    expect(() => getParams([])).to.not.throw()
-  })
-
-  it('should fetch parameters from stores for the given keys', () => {
-    const nameStore = observable({
-      name: 'Bob',
-      nickName: 'Bobby'
-    })
-    const date = new Date()
-    const dateStore = observable({
-      date
-    })
-    easyParams(nameStore, { name: 'storage', nickName: 'storage' })
-    easyParams(dateStore, { date: 'storage' })
-
-    const params = getParams(['name', 'nickName', 'date'])
+  it('should fetch parameters from stores', () => {
+    const params = getParams()
     expect(params).to.eql({
       name: 'Bob',
-      nickName: 'Bobby',
-      date
+      email: 'bob@gmail.com'
     })
   })
 
   it('should auto recalculate when used in a reaction', async () => {
-    const nameStore = observable({ name: 'Bob' })
-    const emailStore = observable({ email: 'bob@gmail.com' })
-    easyParams(nameStore, { name: 'storage' })
-    easyParams(emailStore, { email: 'storage' })
-
     let params
-    observe(() => (params = getParams(['name', 'email'])))
+    observe(() => (params = getParams()))
     expect(params).to.eql({ name: 'Bob', email: 'bob@gmail.com' })
 
     nameStore.name = 'Dave'

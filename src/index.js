@@ -37,20 +37,13 @@ export function routeParams (params) {
   })
 }
 
-export function getParams (keys) {
-  if (!Array.isArray(keys)) {
-    throw new TypeError('The first argument must be a an array of keys.')
-  }
-
+export function getParams () {
   const params = {}
 
-  // fetch the params for the given keys from all the stores
-  // and merge them into a single params object
+  // fetch the params from all of the stores and merge them into a single object
   stores.forEach((config, store) => {
     for (let key of config.keys) {
-      if (keys.includes(key)) {
-        params[key] = store[key]
-      }
+      params[key] = store[key]
     }
   })
   return params

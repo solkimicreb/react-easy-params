@@ -4,6 +4,7 @@ const commonjs = require('rollup-plugin-commonjs')
 const babel = require('rollup-plugin-babel')
 const coverage = require('rollup-plugin-coverage')
 const alias = require('rollup-plugin-alias')
+const replace = require('rollup-plugin-replace')
 const TestServer = require('karma').Server
 
 const bundleType = process.env.BUNDLE_TYPE
@@ -18,10 +19,14 @@ const config = {
   },
   rollupPreprocessor: {
     plugins: [
+      babel({
+        exclude: 'node_modules/**'
+      }),
       resolve(),
       commonjs({
         namedExports: {
-          'node_modules/chai/index.js': ['expect']
+          'node_modules/chai/index.js': ['expect'],
+          'node_modules/react/react.js': ['Component']
         }
       }),
       alias({
@@ -30,9 +35,7 @@ const config = {
       coverage({
         include: ['src/**/*.js']
       }),
-      babel({
-        exclude: 'node_modules/**'
-      })
+      replace({ 'process.env.NODE_ENV': JSON.stringify('development') })
     ],
     format: 'iife',
     name: 'reactEasyParams',

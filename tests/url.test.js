@@ -1,6 +1,6 @@
-import { observable, observe } from '@nx-js/observer-util'
+import { observe } from '@nx-js/observer-util'
 import { expect } from 'chai'
-import { easyParams, routeParams } from 'react-easy-params'
+import { easyStore, routeParams } from 'react-easy-params'
 import { nextTick } from './utils'
 
 describe('url synchronization', () => {
@@ -11,14 +11,12 @@ describe('url synchronization', () => {
 
   it('should synchronize store properties with the url on store definition', () => {
     history.replaceState(undefined, '', '?firstName=User')
-    const store = observable({})
-    easyParams(store, { firstName: 'url', lastName: 'url' })
+    const store = easyStore({}, { firstName: 'url', lastName: 'url' })
     expect(store).to.eql({ firstName: 'User' })
   })
 
   it('should synchronize store properties with the url on popstate events', () => {
-    const store = observable()
-    easyParams(store, { firstName: 'url', lastName: 'url' })
+    const store = easyStore({}, { firstName: 'url', lastName: 'url' })
     history.replaceState(undefined, '', '?firstName=User')
 
     window.dispatchEvent(new Event('popstate'))
@@ -26,8 +24,10 @@ describe('url synchronization', () => {
   })
 
   it('should synchronize the url with store properties', async () => {
-    const store = observable({ firstName: 'Test' })
-    easyParams(store, { firstName: 'url', lastName: 'url' })
+    const store = easyStore(
+      { firstName: 'Test' },
+      { firstName: 'url', lastName: 'url' }
+    )
     expect(location.search).to.equal('?firstName=Test')
 
     store.lastName = 'User'
@@ -48,8 +48,7 @@ describe('url synchronization', () => {
   })
 
   it('should synchronize store properties and the url on param routing', async () => {
-    const store = observable({})
-    easyParams(store, { firstName: 'url', lastName: 'url' })
+    const store = easyStore({}, { firstName: 'url', lastName: 'url' })
 
     routeParams({ firstName: 'Such', lastName: 'Bob' })
     await nextTick()
@@ -59,8 +58,7 @@ describe('url synchronization', () => {
 
   it('should cast numbers', async () => {
     history.replaceState(undefined, '', '?num=1')
-    const store = observable({ num: 10 })
-    easyParams(store, { num: 'url' })
+    const store = easyStore({ num: 10 }, { num: 'url' })
     expect(store).to.eql({ num: 1 })
 
     store.num = 2
@@ -70,8 +68,7 @@ describe('url synchronization', () => {
 
   it('should cast booleans', async () => {
     history.replaceState(undefined, '', '?bool=false')
-    const store = observable({ bool: true })
-    easyParams(store, { bool: 'url' })
+    const store = easyStore({ bool: true }, { bool: 'url' })
     expect(store).to.eql({ bool: false })
 
     store.bool = true
@@ -82,8 +79,7 @@ describe('url synchronization', () => {
   it('should cast dates', async () => {
     let date = new Date()
     history.replaceState(undefined, '', `?date=${date.getTime()}`)
-    const store = observable({ date: new Date() })
-    easyParams(store, { date: 'url' })
+    const store = easyStore({ date: new Date() }, { date: 'url' })
     expect(store).to.eql({ date })
 
     date = new Date()
@@ -93,14 +89,12 @@ describe('url synchronization', () => {
   })
 
   it('should throw on objects', () => {
-    const store = observable({ obj: {} })
-    expect(() => easyParams(store, { obj: 'history' })).to.throw()
+    expect(() => easyStore({ obj: {} }, { obj: 'history' })).to.throw()
   })
 
   it('should encode and decode special characters for the url', async () => {
     history.replaceState(undefined, '', '?code=%3F%26%2B%3D')
-    const store = observable()
-    easyParams(store, { code: 'url' })
+    const store = easyStore({}, { code: 'url' })
     expect(store).to.eql({ code: '?&+=' })
 
     store.code = '??=*&'
@@ -110,9 +104,8 @@ describe('url synchronization', () => {
 
   it('should trigger external reactions on popstate', async () => {
     let dummy
-    const person = observable()
+    const person = easyStore({}, { name: 'url' })
     observe(() => (dummy = person.name))
-    easyParams(person, { name: 'url' })
 
     history.replaceState(undefined, '', '?name=Bob')
     window.dispatchEvent(new Event('popstate'))

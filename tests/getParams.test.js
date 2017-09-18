@@ -1,16 +1,14 @@
-import { observable, observe } from '@nx-js/observer-util'
+import { observe } from '@nx-js/observer-util'
 import { expect } from 'chai'
-import { easyParams, getParams } from 'react-easy-params'
+import { easyStore, getParams } from 'react-easy-params'
 import { nextTick } from './utils'
 
 describe('getParams', () => {
   let nameStore, emailStore
 
   before(() => {
-    nameStore = observable({ name: 'Bob' })
-    emailStore = observable({ email: 'bob@gmail.com' })
-    easyParams(nameStore, { name: 'storage' })
-    easyParams(emailStore, { email: 'storage' })
+    nameStore = easyStore({ name: 'Bob' }, { name: 'storage' })
+    emailStore = easyStore({ email: 'bob@gmail.com' }, { email: 'storage' })
   })
 
   beforeEach(async () => {

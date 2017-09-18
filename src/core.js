@@ -1,4 +1,5 @@
-import { isObservable, observe, unobserve, unqueue } from '@nx-js/observer-util'
+import { easyStore as originalEasyStore } from 'react-easy-state'
+import { observe, unobserve, unqueue } from '@nx-js/observer-util'
 import { syncStoreWithUrl, syncUrlWithStore } from './url'
 import { syncStoreWithHistory, syncHistoryWithStore } from './history'
 import { syncStoreWithStorage, syncStorageWithStore } from './storage'
@@ -8,18 +9,22 @@ const stores = new Map()
 const activeStores = new Map()
 const synchronizers = new Map()
 
-export function easyParams (store, config) {
-  if (!isObservable(store)) {
-    throw new TypeError(
-      'The first argument must be an observable state store.'
-    )
+export function easyStore (store, config) {
+  store = originalEasyStore(store)
+
+  if (config === undefined) {
+    return store
   }
   if (typeof config !== 'object' || config === null) {
-    throw new TypeError('The second argument must be a config object.')
+    throw new TypeError(
+      'The second argument must be undefined or a config object.'
+    )
   }
+
   config = setupConfig(config)
   stores.set(store, config)
   activate(store)
+  return store
 }
 
 export function routeParams (params) {
@@ -50,7 +55,7 @@ export function getParams () {
   return params
 }
 
-function activate (store) {
+export function activate (store) {
   if (activeStores.has(store)) {
     return
   }
@@ -74,7 +79,7 @@ function activate (store) {
   initing = false
 }
 
-function deactivate (store) {
+export function deactivate (store) {
   if (!activeStores.has(store)) {
     return
   }

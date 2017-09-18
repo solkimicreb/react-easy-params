@@ -1,6 +1,6 @@
-import { observable, observe } from '@nx-js/observer-util'
+import { observe } from '@nx-js/observer-util'
 import { expect } from 'chai'
-import { easyParams, routeParams } from 'react-easy-params'
+import { easyStore, routeParams } from 'react-easy-params'
 import { nextTick } from './utils'
 
 describe('routeParams', () => {
@@ -15,10 +15,8 @@ describe('routeParams', () => {
   })
 
   it('should distribute parameters between stores', () => {
-    const nameStore = observable()
-    const dateStore = observable()
-    easyParams(nameStore, { name: 'storage', nickName: 'storage' })
-    easyParams(dateStore, { date: 'storage' })
+    const nameStore = easyStore({}, { name: 'storage', nickName: 'storage' })
+    const dateStore = easyStore({}, { date: 'storage' })
 
     const date = new Date()
     routeParams({ name: 'Bob', date, email: 'bob@gmail.com' })
@@ -28,9 +26,8 @@ describe('routeParams', () => {
 
   it('should trigger external reactions', async () => {
     let dummy
-    const person = observable()
+    const person = easyStore({}, { name: 'storage' })
     observe(() => (dummy = person.name))
-    easyParams(person, { name: 'storage' })
 
     routeParams({ name: 'Bob' })
     await nextTick()

@@ -1,6 +1,6 @@
-import { observable, observe } from '@nx-js/observer-util'
+import { observe } from '@nx-js/observer-util'
 import { expect } from 'chai'
-import { easyParams, routeParams } from 'react-easy-params'
+import { easyStore, routeParams } from 'react-easy-params'
 import { nextTick, nextRender } from './utils'
 
 describe('history synchronization', () => {
@@ -10,14 +10,15 @@ describe('history synchronization', () => {
   })
 
   it('should synchronize store properties with the history on store definition', () => {
-    const store = observable({ firstName: 'Test', lastName: 'User' })
-    easyParams(store, { firstName: 'history', lastName: 'history' })
+    easyStore(
+      { firstName: 'Test', lastName: 'User' },
+      { firstName: 'history', lastName: 'history' }
+    )
     expect(history.state).to.eql({ firstName: 'Test', lastName: 'User' })
   })
 
   it('should synchronize store properties with the history on popstate events', () => {
-    const store = observable()
-    easyParams(store, { firstName: 'history', lastName: 'history' })
+    const store = easyStore({}, { firstName: 'history', lastName: 'history' })
     history.replaceState(
       { firstName: 'Bob', lastName: 'Smith' },
       '',
@@ -29,8 +30,10 @@ describe('history synchronization', () => {
   })
 
   it('should synchronize the history with store properties', async () => {
-    const store = observable({ firstName: 'Test' })
-    easyParams(store, { firstName: 'history', lastName: 'history' })
+    const store = easyStore(
+      { firstName: 'Test' },
+      { firstName: 'history', lastName: 'history' }
+    )
     expect(history.state).to.eql({ firstName: 'Test' })
 
     store.lastName = 'User'
@@ -43,8 +46,7 @@ describe('history synchronization', () => {
   })
 
   it('should synchronize store properties and the history on param routing', async () => {
-    const store = observable({})
-    easyParams(store, { firstName: 'history', lastName: 'history' })
+    const store = easyStore({}, { firstName: 'history', lastName: 'history' })
 
     routeParams({ firstName: 'Such', lastName: 'Bob' })
     await nextTick()
@@ -55,8 +57,10 @@ describe('history synchronization', () => {
   it('should add new history items when neccessary', async () => {
     const startLength = history.length
 
-    const store = observable({ firstName: 'Test' })
-    easyParams(store, { firstName: 'history', lastName: 'history' })
+    const store = easyStore(
+      { firstName: 'Test' },
+      { firstName: 'history', lastName: 'history' }
+    )
     expect(history.state).to.eql({ firstName: 'Test' })
     expect(history.length).to.equal(startLength)
 
@@ -76,8 +80,10 @@ describe('history synchronization', () => {
   it('should not add multiple history items between two frames', async () => {
     const startLength = history.length
 
-    const store = observable({ firstName: 'Test' })
-    easyParams(store, { firstName: 'history', lastName: 'history' })
+    const store = easyStore(
+      { firstName: 'Test' },
+      { firstName: 'history', lastName: 'history' }
+    )
     expect(history.state).to.eql({ firstName: 'Test' })
     expect(history.length).to.equal(startLength)
 
@@ -95,8 +101,7 @@ describe('history synchronization', () => {
   it('should cast dates', async () => {
     let date = new Date()
     history.replaceState({ date: date.getTime() }, '', location.pathname)
-    const store = observable({ date: new Date() })
-    easyParams(store, { date: 'history' })
+    const store = easyStore({ date: new Date() }, { date: 'history' })
     expect(store).to.eql({ date })
 
     date = new Date()
@@ -106,15 +111,13 @@ describe('history synchronization', () => {
   })
 
   it('should throw on objects', () => {
-    const store = observable({ obj: {} })
-    expect(() => easyParams(store, { obj: 'history' })).to.throw()
+    expect(() => easyStore({ obj: {} }, { obj: 'history' })).to.throw()
   })
 
   it('should trigger external reactions on popstate', async () => {
     let dummy
-    const person = observable()
+    const person = easyStore({}, { name: 'history' })
     observe(() => (dummy = person.name))
-    easyParams(person, { name: 'history' })
 
     history.replaceState({ name: 'Bob' }, '', location.pathname)
     window.dispatchEvent(new Event('popstate'))

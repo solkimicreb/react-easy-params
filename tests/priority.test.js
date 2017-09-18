@@ -1,6 +1,5 @@
-import { observable } from '@nx-js/observer-util'
 import { expect } from 'chai'
-import { easyParams, routeParams } from 'react-easy-params'
+import { easyStore, routeParams } from 'react-easy-params'
 import { nextTick } from './utils'
 
 describe('synchronization priorities', () => {
@@ -16,16 +15,18 @@ describe('synchronization priorities', () => {
     localStorage.setItem('email', 'ann@gmail.com')
     history.replaceState({ name: 'Dave', age: 29 }, '', '?age=32')
 
-    const store = observable({
-      name: 'Bob',
-      age: 22,
-      email: 'bob@gmail.com'
-    })
-    easyParams(store, {
-      name: ['storage', 'url', 'history'],
-      age: ['url', 'history', 'storage'],
-      email: ['history', 'storage', 'url']
-    })
+    const store = easyStore(
+      {
+        name: 'Bob',
+        age: 22,
+        email: 'bob@gmail.com'
+      },
+      {
+        name: ['storage', 'url', 'history'],
+        age: ['url', 'history', 'storage'],
+        email: ['history', 'storage', 'url']
+      }
+    )
     expect(store).to.eql({ name: 'Dave', age: 32, email: 'ann@gmail.com' })
 
     routeParams({ name: 'Bill', age: 40, email: 'bill@gmail.com' })
@@ -45,11 +46,13 @@ describe('synchronization priorities', () => {
   })
 
   it('should favour url before history before storage on popstate event', async () => {
-    const store = observable({ name: 'Bill', age: 60 })
-    easyParams(store, {
-      name: ['storage', 'url', 'history'],
-      age: ['url', 'history', 'storage']
-    })
+    const store = easyStore(
+      { name: 'Bill', age: 60 },
+      {
+        name: ['storage', 'url', 'history'],
+        age: ['url', 'history', 'storage']
+      }
+    )
 
     history.replaceState({ name: 'Dave', age: 29 }, '', '?age=32')
     window.dispatchEvent(new Event('popstate'))
@@ -58,11 +61,13 @@ describe('synchronization priorities', () => {
   })
 
   it('should synchronize the storage on history navigation with url favored over history', async () => {
-    const store = observable({ name: 'Ann', age: 20 })
-    easyParams(store, {
-      name: ['storage', 'url', 'history'],
-      age: ['url', 'history', 'storage']
-    })
+    const store = easyStore(
+      { name: 'Ann', age: 20 },
+      {
+        name: ['storage', 'url', 'history'],
+        age: ['url', 'history', 'storage']
+      }
+    )
     expect(store).to.eql({ name: 'Ann', age: 20 })
 
     history.replaceState({ name: 'Bob', age: 12 }, '', '?name=Dave')

@@ -1,5 +1,4 @@
 import { easyComp } from 'react-easy-state'
-import easyPage from './easyPage'
-import { easyStore, getParams, routeParams } from './core'
+import { easyStore, getParams, routeParams, activate, deactivate } from './core'
 
-export { easyStore, easyComp, easyPage, getParams, routeParams }
+export { easyStore, easyComp, getParams, routeParams, activate, deactivate }

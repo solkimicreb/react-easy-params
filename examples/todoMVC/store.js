@@ -1,8 +1,7 @@
-import { easyStore } from 'react-easy-state'
-import { easyParams } from 'react-easy-params'
+import { easyStore } from 'react-easy-params'
 
 // a complex global store with a lot of derived data (getters and setters)
-const store = easyStore({
+const store = {
   all: [],
   filter: 'all',
   get isEmpty () {
@@ -44,15 +43,15 @@ const store = easyStore({
   clearCompleted () {
     this.all = this.active
   }
-})
+}
 
 // store.filter is two-way synchronized with the URL query string
 // and adds a new history item whenever it changes
 // store.all is synchronized with the LocalStorage,
 // so the todos are kept between page reloads
-easyParams(store, {
+const params = {
   filter: ['url', 'history'],
   all: ['storage']
-})
+}
 
-export default store
+export default easyStore(store, params)

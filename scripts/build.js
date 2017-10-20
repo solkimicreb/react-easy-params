@@ -13,8 +13,8 @@ const bundles = [
     input: {
       input: path.resolve('src/index.js'),
       plugins: [
-        resolvePlugin(),
         babelPlugin({ exclude: 'node_modules/**' }),
+        resolvePlugin(),
         externalsPlugin({ dependencies: true, peerDependecies: true })
       ]
     },
@@ -26,16 +26,16 @@ const bundles = [
     input: {
       input: path.resolve('src/index.js'),
       plugins: [
-        resolvePlugin(),
         babelPlugin({ exclude: 'node_modules/**' }),
+        resolvePlugin(),
         externalsPlugin({ dependencies: true, peerDependecies: true })
       ]
     },
     output: {
       format: 'cjs'
     }
-  },
-  {
+  }
+  /*{
     input: {
       input: path.resolve('src/index.js'),
       plugins: [
@@ -48,7 +48,7 @@ const bundles = [
       format: 'umd',
       name: 'easyParams'
     }
-  }
+  }*/
 ]
 
 async function build () {

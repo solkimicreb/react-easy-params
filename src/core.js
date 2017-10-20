@@ -23,18 +23,13 @@ export function easyStore (store, config) {
 
   config = setupConfig(config)
   stores.set(store, config)
-  activate(store)
   return store
 }
 
 export function routeParams (params) {
-  if (typeof params !== 'object' || params === null) {
-    throw new TypeError('The first argument must be a params object.')
-  }
-
   // distibute the passed params between the stores based on their config keys
-  // the url/history/localStorage will update automatically because of the reactions
-  activeStores.forEach((config, store) => {
+  // the url/history/localStorage will update automatically
+  stores.forEach((config, store) => {
     for (let key of config.keys) {
       if (key in params) {
         store[key] = params[key]
@@ -43,12 +38,22 @@ export function routeParams (params) {
   })
 }
 
+// DELETE THIS LATER
+window.observe = () => {
+  observe(() => activeStores.forEach((config, store) => console.log('type', store, store.type)))
+  observe(() => console.log('PARAMS', getParams()))
+  console.log('stores', stores)
+  console.log('activeStore', activeStores)
+}
+
 export function getParams () {
   const params = {}
+  // get params from the passed store or all stores if no store is passed
 
   // fetch the params from all of the stores and merge them into a single object
   activeStores.forEach((config, store) => {
     for (let key of config.keys) {
+      console.log('GET STORE', store, key, store[key])
       params[key] = store[key]
     }
   })
@@ -56,6 +61,9 @@ export function getParams () {
 }
 
 export function activate (store) {
+  if (!stores.has(store)) {
+    throw new Error('The first argument must be a param synced store.')
+  }
   if (activeStores.has(store)) {
     return
   }
@@ -85,10 +93,10 @@ export function deactivate (store) {
   }
   activeStores.delete(store)
 
-  const sync = synchronizers.get(store)
-  unobserve(sync.storage)
-  unobserve(sync.history)
-  unobserve(sync.url)
+  const synchronizer = synchronizers.get(store)
+  unobserve(synchronizer.storage)
+  unobserve(synchronizer.history)
+  unobserve(synchronizer.url)
   synchronizers.delete(store)
 }
 

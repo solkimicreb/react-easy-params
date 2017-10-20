@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import classNames from 'classnames'
-import { easyComp } from 'react-easy-state'
+import { easyPage } from 'react-easy-params'
 import TodoItem from './TodoItem'
 import todos from './store'
 
@@ -56,5 +56,5 @@ class App extends Component {
   }
 }
 
-// wrap the component with easyComp before exporting it
-export default easyComp(App)
+// bind the component with the store with easyPage before exporting it
+export default easyPage(App, todos)

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import classNames from 'classnames'
-import { easyComp } from 'react-easy-state'
+import { easyComp } from 'react-easy-params'
 import todos from './store'
 
 class TodoItem extends Component {

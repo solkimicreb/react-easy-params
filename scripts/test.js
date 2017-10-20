@@ -35,7 +35,9 @@ const config = {
       coverage({
         include: ['src/**/*.js']
       }),
-      replace({ 'process.env.NODE_ENV': JSON.stringify('development') })
+      replace({
+        'process.env.NODE_ENV': JSON.stringify('development')
+      })
     ],
     format: 'iife',
     name: 'reactEasyParams',

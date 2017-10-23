@@ -100,11 +100,6 @@ export function deactivate (store) {
   unobserve(synchronizer.history)
   unobserve(synchronizer.url)
   synchronizers.delete(store)
-
-  // I should sync again...
-  // activeStores.forEach(syncStorageWithStore)
-  // activeStores.forEach(syncHistoryWithStore)
-  // activeStores.forEach(syncUrlWithStore)
 }
 
 window.addEventListener('popstate', () => {

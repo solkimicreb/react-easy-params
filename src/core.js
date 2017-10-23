@@ -23,40 +23,42 @@ export function easyStore (store, config) {
 
   config = setupConfig(config)
   stores.set(store, config)
+  // activate the store (sync with url, history and storage) on init
+  activate(store)
   return store
 }
 
-export function routeParams (params) {
-  // distibute the passed params between the stores based on their config keys
+export function routeParams (params, store) {
+  // assign the passed params between to the passed store based on its config keys
   // the url/history/localStorage will update automatically
-  stores.forEach((config, store) => {
+  if (store) {
+    const config = stores.get(store)
     for (let key of config.keys) {
       if (key in params) {
         store[key] = params[key]
       }
     }
-  })
+  } else {
+    // distibute the passed params between the active stores
+    activeStores.forEach((config, store) => routeParams(params, store))
+  }
 }
 
-// DELETE THIS LATER
-window.observe = () => {
-  observe(() => activeStores.forEach((config, store) => console.log('type', store, store.type)))
-  observe(() => console.log('PARAMS', getParams()))
-  console.log('stores', stores)
-  console.log('activeStore', activeStores)
-}
-
-export function getParams () {
+export function getParams (store) {
   const params = {}
-  // get params from the passed store or all stores if no store is passed
 
-  // fetch the params from all of the stores and merge them into a single object
-  activeStores.forEach((config, store) => {
+  // get params from the passed store
+  if (store) {
+    const config = stores.get(store)
     for (let key of config.keys) {
-      console.log('GET STORE', store, key, store[key])
       params[key] = store[key]
     }
-  })
+  } else {
+    // fetch the params from all of the active stores and merge them into a single object
+    activeStores.forEach((config, store) => {
+      Object.assign(params, getParams(store))
+    })
+  }
   return params
 }
 
@@ -98,6 +100,11 @@ export function deactivate (store) {
   unobserve(synchronizer.history)
   unobserve(synchronizer.url)
   synchronizers.delete(store)
+
+  // I should sync again...
+  // activeStores.forEach(syncStorageWithStore)
+  // activeStores.forEach(syncHistoryWithStore)
+  // activeStores.forEach(syncUrlWithStore)
 }
 
 window.addEventListener('popstate', () => {

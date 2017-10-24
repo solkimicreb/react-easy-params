@@ -2,7 +2,7 @@ export function toQuery (params) {
   const tokens = []
   for (let key in params) {
     const value = params[key]
-    if (value !== undefined) {
+    if (value !== undefined && value !== '') {
       tokens.push(`${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
     }
   }

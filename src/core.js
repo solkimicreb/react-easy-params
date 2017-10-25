@@ -23,8 +23,6 @@ export function easyStore (store, config) {
 
   config = setupConfig(config)
   stores.set(store, config)
-  // activate the store (sync with url, history and storage) on init
-  activate(store)
   return store
 }
 

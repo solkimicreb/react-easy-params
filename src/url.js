@@ -1,33 +1,27 @@
-import { toStoreType, toWidgetType } from './types'
-import { toQuery, toParams } from './searchParams'
+import { observable, observe } from '@nx-js/observer-util'
+import scheduler from './scheduler'
+import { toQuery, toParams, toPathArray, toPathString } from './utils'
 
-export function syncUrlWithStore (config, store) {
-  const params = toParams(location.search)
-  let paramsChanged = false
+export const params = observable(toParams(location.search))
+export const path = observable(toPathArray(location.pathname))
 
-  for (let key of config.url) {
-    const newValue = toWidgetType(store[key], false)
-    if (params[key] !== newValue) {
-      params[key] = newValue
-      paramsChanged = true
-    }
+export function setParams (newParams) {
+  for (let key of Object.keys(params)) {
+    delete params[key]
   }
-
-  // replaceState is expensive, only do it when it is necessary
-  if (paramsChanged) {
-    history.replaceState(history.state, '', createUrl(params))
-  }
+  Object.assign(params, newParams)
 }
 
-export function syncStoreWithUrl (config, store) {
-  const params = toParams(location.search)
-  for (let key of config.url) {
-    if (key in params) {
-      store[key] = toStoreType(params[key], store[key])
-    }
-  }
+export function setPath (newPath) {
+  path.length = 0
+  path.push(...newPath)
 }
 
-function createUrl (params) {
-  return location.pathname + toQuery(params) + location.hash
+function syncUrl () {
+  const url = toPathString(path) + toQuery(params) + location.hash
+  history.replaceState(history.state, '', url)
 }
+
+observe(syncUrl, { scheduler })
+
+

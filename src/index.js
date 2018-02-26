@@ -1,4 +1,3 @@
-import { easyComp } from 'react-easy-state'
-import { easyStore, getParams, routeParams, activate, deactivate } from './core'
-
-export { easyStore, easyComp, getParams, routeParams, activate, deactivate }
+export { params, path, setParams, setPath } from './url'
+export { storage, setStorage } from './storage'
+export { default as scheduler } from './scheduler'

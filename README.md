@@ -4,7 +4,7 @@ Auto synchronize your state with the LocalStorage and URL query parameters. Work
 
 [![Build](https://img.shields.io/circleci/project/github/solkimicreb/react-easy-params/master.svg)](https://circleci.com/gh/solkimicreb/react-easy-params/tree/master) [![Coverage Status](https://coveralls.io/repos/github/solkimicreb/react-easy-params/badge.svg)](https://coveralls.io/github/solkimicreb/react-easy-params) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com) [![Package size](http://img.badgesize.io/https://unpkg.com/react-easy-params/dist/umd.es6.min.js?compression=gzip&label=minzip_size)](https://unpkg.com/react-easy-params/dist/umd.es6.js)  [![Version](https://img.shields.io/npm/v/react-easy-params.svg)](https://www.npmjs.com/package/react-easy-params) [![dependencies Status](https://david-dm.org/solkimicreb/react-easy-params/status.svg)](https://david-dm.org/solkimicreb/react-easy-params) [![License](https://img.shields.io/npm/l/react-easy-params.svg)](https://www.npmjs.com/package/react-easy-params)
 
-<a href="#platform-support"><img src="images/browser_support.png" alt="Browser support" width="420px" /></a>
+<a href="#platform-support"><img src="images/browser_support.png" alt="Browser support" width="400px" /></a>
 
 <details>
 <summary><strong>Table of Contents</strong></summary>
@@ -28,7 +28,7 @@ Auto synchronize your state with the LocalStorage and URL query parameters. Work
 
 ## Introduction
 
-Easy Params is a tool for **small apps** - without client-side routing. It exposes two objects and an array.
+Easy Params is a tool for **small apps - without client-side routing**. It exposes two objects and an array.
 
 - The `params` object is reflected in the URL query parameters.
 - The `path` array is reflected in the URL pathname.
@@ -50,7 +50,8 @@ export default view(() =>
 )
 ```
 
-<img src="images/param_sync.gif" alt="Synchronization Demo" width="400px" />
+<img src="images/param_code.png" alt="Synchronization Demo" width="50%" />
+<img src="images/param_sync.gif" alt="Synchronization Demo" width="50%" align="right" />
 
 This is enough for it to automatically update your views when needed - no matter how exotically you mutate your state stores. With this freedom you can invent and use your personal favorite state management patterns.
 

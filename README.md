@@ -1,8 +1,10 @@
 # React Easy Params
 
+Auto synchronize your state with the LocalStorage and URL query parameters. Works best together with [React Easy State](https://github.com/solkimicreb/react-easy-state).
+
 [![Build](https://img.shields.io/circleci/project/github/solkimicreb/react-easy-params/master.svg)](https://circleci.com/gh/solkimicreb/react-easy-params/tree/master) [![Coverage Status](https://coveralls.io/repos/github/solkimicreb/react-easy-params/badge.svg)](https://coveralls.io/github/solkimicreb/react-easy-params) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com) [![Package size](http://img.badgesize.io/https://unpkg.com/react-easy-params/dist/umd.es6.min.js?compression=gzip&label=minzip_size)](https://unpkg.com/react-easy-params/dist/umd.es6.js)  [![Version](https://img.shields.io/npm/v/react-easy-params.svg)](https://www.npmjs.com/package/react-easy-params) [![dependencies Status](https://david-dm.org/solkimicreb/react-easy-params/status.svg)](https://david-dm.org/solkimicreb/react-easy-params) [![License](https://img.shields.io/npm/l/react-easy-params.svg)](https://www.npmjs.com/package/react-easy-params)
 
-*Easy Params two-way synchronizes your state with the URL, the browser history and the LocalStorage with a simple declarative syntax.*
+<a href="#platform-support"><img src="images/browser_support.png" alt="Browser support" width="420px" /></a>
 
 <details>
 <summary><strong>Table of Contents</strong></summary>
@@ -23,6 +25,34 @@
 <!-- tocstop -->
 
 </details>
+
+## Introduction
+
+Easy Params is a tool for **small apps** - without client-side routing. It exposes two objects and an array.
+
+- The `params` object is reflected in the URL query parameters.
+- The `path` array is reflected in the URL pathname.
+- The `storage` object is persisted in the localStorage.
+
+```js
+import React from 'react'
+import { view } from 'react-easy-state'
+import { params, path } from 'react-easy-params'
+
+const updateParam = ev => params.name = ev.target.value
+const updatePath = ev => path[0] = ev.target.value
+
+export default view(() =>
+  <div>
+    <div>Path: <input onChange={updatePath} value={path[0]} /></div>
+    <div>Param: <input onChange={updateParam} value={params.name} /></div>
+  </div>
+)
+```
+
+<img src="images/param_sync.gif" alt="Synchronization Demo" width="400px" />
+
+This is enough for it to automatically update your views when needed - no matter how exotically you mutate your state stores. With this freedom you can invent and use your personal favorite state management patterns.
 
 ## Installation
 

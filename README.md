@@ -34,7 +34,24 @@ Easy Params is a tool for **small apps - without client-side routing**. It expos
 - The `path` array is reflected in the URL pathname.
 - The `storage` object is persisted in the localStorage.
 
-<img src="images/param_code.png" alt="Synchronization Demo" width="52%" min-width="550px" /><img src="images/param_sync.gif" alt="Synchronization Demo" width="48%" min-width="550px" />
+```js
+import React from 'react'
+import { view } from 'react-easy-state'
+import { params, path } from 'react-easy-params'
+
+const updateParam = ev => params.name = ev.target.value
+const updatePath = ev => path[0] = ev.target.value
+
+export default view(() =>
+  <div>
+    <div>Path: <input onChange={updatePath} value={path[0]} /></div>
+    <div>Param: <input onChange={updateParam} value={params.name} /></div>
+  </div>
+)
+```
+
+<img src="images/param_code.png" alt="Synchronization Demo" width="100%" />
+<img src="images/param_sync.gif" alt="Synchronization Demo" width="100%" />
 
 This is enough for it to automatically update your views when needed - no matter how exotically you mutate your state stores. With this freedom you can invent and use your personal favorite state management patterns.
 

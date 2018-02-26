@@ -50,7 +50,7 @@ export default view(() =>
 )
 ```
 
-<img src="images/param_code.png" alt="Synchronization Demo" width="55%" min-width="450px" /><img src="images/param_sync.gif" alt="Synchronization Demo" width="40%" min-width="350px" align="right" />
+<img src="images/param_code.png" alt="Synchronization Demo" width="52%" min-width="550px" /><img src="images/param_sync.gif" alt="Synchronization Demo" width="48%" min-width="550px" />
 
 This is enough for it to automatically update your views when needed - no matter how exotically you mutate your state stores. With this freedom you can invent and use your personal favorite state management patterns.
 

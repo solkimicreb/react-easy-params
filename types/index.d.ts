@@ -1,9 +1,17 @@
 declare module 'react-easy-params' {
-  const storage: object
-  const params: object
-  const path: Array<any>
+  type primitive = string | boolean | number | null | undefined
+  interface PrimitiveObject {
+    [key: string]: primitive
+  }
+  interface ObjectObject {
+    [key: string]: primitive | ObjectObject
+  }
 
-  function setStorage(obj: storage): void
-  function setParams(obj: params): void
-  function setPath(array: path): void
+  const storage:  ObjectObject
+  const params: PrimitiveObject
+  const path: Array<primitive>
+
+  function setParams(obj: PrimitiveObject): void
+  function setStorage(obj: ObjectObject): void
+  function setPath(array: Array<primitive>): void
 }

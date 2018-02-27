@@ -5,7 +5,7 @@ import SearchBar from 'material-ui-search-bar'
 import { LinearProgress } from 'material-ui/Progress'
 import appStore from './appStore'
 
-const onChange = filter => params.filter = filter
+const onChange = filter => (params.filter = filter)
 
 export default view(() => (
   <div className='searchbar'>

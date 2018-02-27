@@ -1,4 +1,3 @@
-import { observe } from '@nx-js/observer-util'
 import { expect } from 'chai'
 import { setPath, path, scheduler } from 'react-easy-params'
 

@@ -35,7 +35,7 @@ const bundles = [
       format: 'cjs'
     }
   }
-  /*{
+  /* {
     input: {
       input: path.resolve('src/index.js'),
       plugins: [
@@ -48,7 +48,7 @@ const bundles = [
       format: 'umd',
       name: 'easyParams'
     }
-  }*/
+  } */
 ]
 
 async function build () {

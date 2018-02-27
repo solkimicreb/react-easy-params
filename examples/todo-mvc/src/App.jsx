@@ -31,7 +31,9 @@ class App extends Component {
     } = todosStore
 
     const todosClass = classNames({ selected: params.filter === 'all' })
-    const completedClass = classNames({ selected: params.filter === 'completed' })
+    const completedClass = classNames({
+      selected: params.filter === 'completed'
+    })
     const activeClass = classNames({ selected: params.filter === 'active' })
 
     return (

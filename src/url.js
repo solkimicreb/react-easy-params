@@ -23,5 +23,3 @@ function syncUrl () {
 }
 
 observe(syncUrl, { scheduler })
-
-

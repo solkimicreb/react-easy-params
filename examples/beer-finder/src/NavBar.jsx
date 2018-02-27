@@ -5,19 +5,13 @@ import SearchBar from 'material-ui-search-bar'
 import { LinearProgress } from 'material-ui/Progress'
 import appStore from './appStore'
 
-function onChange (filter) {
-  params.filter = filter
-}
-
-function onRequestSearch (filter) {
-  appStore.fetchBeers(filter)
-}
+const onChange = filter => params.filter = filter
 
 export default view(() => (
   <div className='searchbar'>
     <SearchBar
       onChange={onChange}
-      onRequestSearch={onRequestSearch}
+      onRequestSearch={appStore.fetchBeers}
       value={params.filter}
       placeholder='Some food ...'
     />

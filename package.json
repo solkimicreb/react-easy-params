@@ -1,7 +1,7 @@
 {
   "name": "react-easy-params",
   "version": "1.0.0",
-  "description": "Automatic two-way synchronization between the state, the URL, the browser history and the LocalStorage.",
+  "description": "Automatic synchronization between your state, the URL and the LocalStorage.",
   "main": "dist/cjs.es5.js",
   "module": "dist/es.es5.js",
   "files": [
@@ -11,11 +11,12 @@
     "test": "node ./scripts/test.js",
     "test-builds": "node ./scripts/testBuilds.js",
     "lint": "standard",
-    "lint-fix": "prettier --ignore-path '.gitignore' --write '**/!(bundle).js' && standard --fix",
+    "lint-fix": "prettier --ignore-path '.gitignore' --write '**/*.{js,jsx}' '!**/build/**' && standard --fix",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls",
     "build": "node ./scripts/build.js",
     "build-examples": "node ./scripts/buildExamples.js",
-    "build-examples-watch": "node ./scripts/buildExamples.js --watch",
+    "link-examples": "node ./scripts/linkExamples.js",
+    "unlink-examples": "node ./scripts/unlinkExamples.js",
     "build-toc": "node ./scripts/buildToc.js"
   },
   "author": {
@@ -37,9 +38,10 @@
     "url",
     "history",
     "localstorage",
-    "reactivity",
-    "automatic",
-    "binding"
+    "transparent",
+    "reactive",
+    "binding",
+    "routing"
   ],
   "dependencies": {
     "@nx-js/observer-util": "^4.1.1",
@@ -89,6 +91,10 @@
     "env": [
       "browser",
       "mocha"
+    ],
+    "ignore": [
+      "**/build/**",
+      "**/node_modules/**"
     ]
   },
   "pre-push": [

@@ -1,4 +1,3 @@
-import { observe } from '@nx-js/observer-util'
 import { expect } from 'chai'
 import { storage, setStorage, scheduler } from 'react-easy-params'
 
@@ -11,7 +10,9 @@ describe('storage synchronization', () => {
   })
 
   it('should initialize from localStorage', () => {
-    expect(JSON.parse(localStorage.getItem(STORAGE_NAME))).to.eql({ initial: true })
+    expect(JSON.parse(localStorage.getItem(STORAGE_NAME))).to.eql({
+      initial: true
+    })
     expect(storage).to.eql({ initial: true })
   })
 

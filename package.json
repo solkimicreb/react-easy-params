@@ -1,6 +1,6 @@
 {
   "name": "react-easy-params",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Automatic synchronization between your state, the URL and the LocalStorage.",
   "main": "dist/cjs.es5.js",
   "module": "dist/es.es5.js",

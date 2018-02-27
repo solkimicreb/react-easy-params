@@ -33,15 +33,15 @@
 
 ## Introduction
 
-<div align="center">
-  <img src="images/param_sync.gif" alt="Synchronization Demo" width="500px" />
-</div>
-
 Easy Params is a tool for **small apps - without client-side routing**. It exposes two objects and an array, which synchronize with the corresponding browser APIs on mutations.
 
 - The `params` object is reflected in the URL query parameters.
 - The `path` array is reflected in the URL pathname.
 - The `storage` object is persisted in the localStorage.
+
+<div align="center">
+  <img src="images/param_sync.gif" alt="Synchronization Demo" width="500px" />
+</div>
 
 ```js
 import React from 'react'
@@ -58,6 +58,8 @@ export default view(() =>
   </div>
 )
 ```
+
+Use it together with [React Easy State](https://github.com/solkimicreb/react-easy-params) for an awesome developer experience.
 
 ## Installation
 
@@ -106,7 +108,7 @@ Replaces the current `path` with the passed array. You should generally mutate `
 - [TodoMVC](https://solkimicreb.github.io/react-easy-params/examples/todo-mvc/build) ([source](/examples/todo-mvc/)) ([codesandbox](https://codesandbox.io/s/github/solkimicreb/react-easy-params/tree/master/examples/todo-mvc)): a classic TodoMVC implementation, which persists the todos in localStorage and reflects the current filter in the URL query.
 - [Beer Finder](https://solkimicreb.github.io/react-easy-params/examples/beer-finder/build) ([source](/examples/beer-finder/)) ([codesandbox](https://codesandbox.io/s/github/solkimicreb/react-easy-params/tree/master/examples/beer-finder)): an app with async actions and a mix of local and global state, which finds matching beers for your meal. It reflects the search parameter in the URL query to make it shareable.
 
-## Relation with [React Easy State](https://github.com/solkimicreb/react-easy-params)
+## Relation with React Easy State
 
 `params`, `path` and `storage` are Easy State [stores](https://github.com/solkimicreb/react-easy-state#creating-stores). If you use them inside your components, they re-render the component on their mutations - to reflect the changes. On top of this they are also reflected in the corresponding browser API.
 

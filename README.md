@@ -22,7 +22,7 @@
   + [path](#path)
   + [setPath(array)](#setpatharray)
 * [Examples with live demos](#examples-with-live-demos)
-* [Relation with [React Easy State](https://github.com/solkimicreb/react-easy-params)](#relation-with-react-easy-statehttpsgithubcomsolkimicrebreact-easy-params)
+* [Relation with React Easy State](#relation-with-react-easy-state)
 * [Platform support](#platform-support)
 * [Alternative builds](#alternative-builds)
 * [Contributing](#contributing)
@@ -48,8 +48,8 @@ import React from 'react'
 import { view } from 'react-easy-state'
 import { params, path } from 'react-easy-params'
 
-const updateParam = ev => params.name = ev.target.value
 const updatePath = ev => path[0] = ev.target.value
+const updateParam = ev => params.name = ev.target.value
 
 export default view(() =>
   <div>
@@ -59,7 +59,7 @@ export default view(() =>
 )
 ```
 
-Use it together with [React Easy State](https://github.com/solkimicreb/react-easy-params) for an awesome developer experience.
+Use it together with [React Easy State](https://github.com/solkimicreb/react-easy-state) for an awesome developer experience.
 
 ## Installation
 
@@ -81,7 +81,7 @@ Replaces the current `params` with the passed object. You should generally mutat
 
 The `storage` object is persisted in the localStorage. You should store session related information - like the current API token or preferred site theme - in it.
 
-The synchronization is one directional. The URL always synchronizes with the `path` array, but the  `path` array won't synchronize with the URL on browser history events. It will synchronize once - at page load - though.
+The synchronization is one directional. The localStorage synchronizes with the `storage` object, but the `storage` object won't synchronize with the localStorage on manual manipulation with `localStorage.setItem()`. It will synchronize once - at page load - though.
 
 ### setStorage(object)
 
@@ -91,7 +91,7 @@ Replaces the current `storage` with the passed object. You should generally muta
 
 The `path` array is reflected in the URL pathname. It is provided for the sake of completeness, you should usually use the `params` object instead.
 
-The synchronization is one directional. The URL always synchronizes with the `path` array, but the  `path` array won't synchronize with the URL on browser history events. It will synchronize once - at page load - though.
+The synchronization is one directional. The URL always synchronizes with the `path` array, but the `path` array won't synchronize with the URL on browser history events. It will synchronize once - at page load - though.
 
 ### setPath(array)
 

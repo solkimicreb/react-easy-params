@@ -1,6 +1,6 @@
 # React Easy Params
 
-Auto synchronize your state with the URL and the LocalStorage :link:
+:link: Auto synchronize your state with the URL and the LocalStorage.
 
 [![Build](https://img.shields.io/circleci/project/github/solkimicreb/react-easy-params/master.svg)](https://circleci.com/gh/solkimicreb/react-easy-params/tree/master) [![Coverage Status](https://coveralls.io/repos/github/solkimicreb/react-easy-params/badge.svg)](https://coveralls.io/github/solkimicreb/react-easy-params) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com) [![Package size](http://img.badgesize.io/https://unpkg.com/react-easy-params/dist/umd.es6.min.js?compression=gzip&label=minzip_size)](https://unpkg.com/react-easy-params/dist/umd.es6.js)  [![Version](https://img.shields.io/npm/v/react-easy-params.svg)](https://www.npmjs.com/package/react-easy-params) [![dependencies Status](https://david-dm.org/solkimicreb/react-easy-params/status.svg)](https://david-dm.org/solkimicreb/react-easy-params) [![License](https://img.shields.io/npm/l/react-easy-params.svg)](https://www.npmjs.com/package/react-easy-params)
 
@@ -33,13 +33,11 @@ Auto synchronize your state with the URL and the LocalStorage :link:
 
 ## Introduction
 
-Easy Params is a tool for **small apps - without client-side routing**.
-
 <div align="center">
   <img src="images/param_sync.gif" alt="Synchronization Demo" width="500px" />
 </div>
 
-It exposes two objects and an array, which synchronize with the corresponding browser APIs on mutations.
+Easy Params is a tool for **small apps - without client-side routing**. It exposes two objects and an array, which synchronize with the corresponding browser APIs on mutations.
 
 - The `params` object is reflected in the URL query parameters.
 - The `path` array is reflected in the URL pathname.
@@ -60,8 +58,6 @@ export default view(() =>
   </div>
 )
 ```
-
-Use it together with [React Easy State](https://github.com/solkimicreb/react-easy-state) for a smooth development flow.
 
 ## Installation
 
@@ -107,8 +103,8 @@ Replaces the current `path` with the passed array. You should generally mutate `
 
 *Advanced*
 
-- [TodoMVC](https://solkimicreb.github.io/react-easy-params/examples/todo-mvc/build) ([source](/examples/todo-mvc/)) ([codesandbox](https://codesandbox.io/s/github/solkimicreb/react-easy-params/tree/master/examples/todo-mvc)): a dummy project, which demonstrates the URL synchronization of `params` and `path`.
-- [Beer Finder](https://solkimicreb.github.io/react-easy-params/examples/beer-finder/build) ([source](/examples/beer-finder/)) ([codesandbox](https://codesandbox.io/s/github/solkimicreb/react-easy-params/tree/master/examples/beer-finder)): a dummy project, which demonstrates the URL synchronization of `params` and `path`.
+- [TodoMVC](https://solkimicreb.github.io/react-easy-params/examples/todo-mvc/build) ([source](/examples/todo-mvc/)) ([codesandbox](https://codesandbox.io/s/github/solkimicreb/react-easy-params/tree/master/examples/todo-mvc)): a classic TodoMVC implementation, which persists the todos in localStorage and reflects the current filter in the URL query.
+- [Beer Finder](https://solkimicreb.github.io/react-easy-params/examples/beer-finder/build) ([source](/examples/beer-finder/)) ([codesandbox](https://codesandbox.io/s/github/solkimicreb/react-easy-params/tree/master/examples/beer-finder)): an app with async actions and a mix of local and global state, which finds matching beers for your meal. It reflects the search parameter in the URL query to make it shareable.
 
 ## Relation with [React Easy State](https://github.com/solkimicreb/react-easy-params)
 

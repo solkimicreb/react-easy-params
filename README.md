@@ -1,10 +1,10 @@
 # React Easy Params
 
-Auto synchronize your state with the LocalStorage and URL query parameters. Works best together with [React Easy State](https://github.com/solkimicreb/react-easy-state).
+Auto synchronize your state with the LocalStorage and URL query parameters.
 
 [![Build](https://img.shields.io/circleci/project/github/solkimicreb/react-easy-params/master.svg)](https://circleci.com/gh/solkimicreb/react-easy-params/tree/master) [![Coverage Status](https://coveralls.io/repos/github/solkimicreb/react-easy-params/badge.svg)](https://coveralls.io/github/solkimicreb/react-easy-params) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com) [![Package size](http://img.badgesize.io/https://unpkg.com/react-easy-params/dist/umd.es6.min.js?compression=gzip&label=minzip_size)](https://unpkg.com/react-easy-params/dist/umd.es6.js)  [![Version](https://img.shields.io/npm/v/react-easy-params.svg)](https://www.npmjs.com/package/react-easy-params) [![dependencies Status](https://david-dm.org/solkimicreb/react-easy-params/status.svg)](https://david-dm.org/solkimicreb/react-easy-params) [![License](https://img.shields.io/npm/l/react-easy-params.svg)](https://www.npmjs.com/package/react-easy-params)
 
-<a href="#platform-support"><img src="images/browser_support.png" alt="Browser support" width="400px" /></a>
+<a href="#platform-support"><img src="images/browser_support.png" alt="Browser support" width="350px" /></a>
 
 <details>
 <summary><strong>Table of Contents</strong></summary>
@@ -12,12 +12,17 @@ Auto synchronize your state with the LocalStorage and URL query parameters. Work
 
 <!-- toc -->
 
+* [Introduction](#introduction)
 * [Installation](#installation)
-* [Usage](#usage)
-  + [easyParams](#easyparams)
-  + [routeParams](#routeparams)
-  + [getParams](#getparams)
+* [API](#api)
+  + [params](#params)
+  + [setParams(object)](#setparamsobject)
+  + [storage](#storage)
+  + [setStorage(object)](#setstorageobject)
+  + [path](#path)
+  + [setPath(array)](#setpatharray)
 * [Examples with live demos](#examples-with-live-demos)
+* [Relation with [React Easy State](https://github.com/solkimicreb/react-easy-params)](#relation-with-react-easy-statehttpsgithubcomsolkimicrebreact-easy-params)
 * [Platform support](#platform-support)
 * [Alternative builds](#alternative-builds)
 * [Contributing](#contributing)
@@ -28,7 +33,13 @@ Auto synchronize your state with the LocalStorage and URL query parameters. Work
 
 ## Introduction
 
-Easy Params is a tool for **small apps - without client-side routing**. It exposes two objects and an array.
+Easy Params is a tool for **small apps - without client-side routing**.
+
+<div align="center">
+  <img src="images/param_sync.gif" alt="Synchronization Demo" width="500px" />
+</div>
+
+It exposes two objects and an array, which synchronize with the corresponding browser APIs on mutations.
 
 - The `params` object is reflected in the URL query parameters.
 - The `path` array is reflected in the URL pathname.
@@ -50,162 +61,58 @@ export default view(() =>
 )
 ```
 
-<div align="center">
-  <img src="images/param_sync.gif" alt="Synchronization Demo" width="600px" />
-</div>
-
-This is enough for it to automatically update your views when needed - no matter how exotically you mutate your state stores. With this freedom you can invent and use your personal favorite state management patterns.
+Use it together with [React Easy State](https://github.com/solkimicreb/react-easy-state) for a smooth development flow.
 
 ## Installation
 
-Easy Params is built on top of the [React Easy State](https://github.com/solkimicreb/react-easy-state) state management library.  Install them together for the best experience.
+`npm install react-easy-params`
 
-`npm install react-easy-params react-easy-state`
+## API
 
-## Usage
+### params
 
-Easy Params consists of two functions:
+The `params` object is reflected in the URL query parameters. You should store primitive values - which define the current state - in it. Storing primitive user inputs in the URL query makes you page shareable and reloadable.
 
-- `easyParams` sets up two-way synchronization between your state stores and the URL, browser history and LocalStorage.
+The synchronization is one directional. The URL always synchronizes with the `params` object, but the `params` object won't synchronize with the URL on browser history events. It will synchronize once - at page load - though.
 
-- `routeParams` replaces the current parameters with new ones and updates your state stores, the URL, the browser history and the LocalStorage to reflect this.
+### setParams(object)
 
-- `getParams` collects the current parameters from the state stores for the passed parameter keys.
+Replaces the current `params` with the passed object. You should generally mutate `params` directly instead.
 
-### easyParams
+### storage
 
-`easyParams(store, config)` sets up the synchronization between the passed store and the URL, history and LocalStorage - based on the passed config object. You can use it as below.
+The `storage` object is persisted in the localStorage. You should store session related information - like the current API token or preferred site theme - in it.
 
-1. Create a reactive state store with [easyStore from React Easy State](https://github.com/solkimicreb/react-easy-state#easystore).
+The synchronization is one directional. The URL always synchronizes with the `path` array, but the  `path` array won't synchronize with the URL on browser history events. It will synchronize once - at page load - though.
 
-2. Select a set of top-level properties from your store and set up declarative two-way synchronization for them with `easyParams`.
+### setStorage(object)
 
-```js
-import { easyStore } from 'react-easy-state'
-import { easyParams } from 'react-easy-params'
+Replaces the current `storage` with the passed object. You should generally mutate `storage` directly instead.
 
-const store = easyStore({
-  name: 'Bob'
-})
+### path
 
-// store.name will be two-way synchronized with the url
-// and a new history item will be added whenever store.name changes
-easyParams(store, {
-  name: ['url', 'history']
-})
+The `path` array is reflected in the URL pathname. It is provided for the sake of completeness, you should usually use the `params` object instead.
 
-export default store
-```
+The synchronization is one directional. The URL always synchronizes with the `path` array, but the  `path` array won't synchronize with the URL on browser history events. It will synchronize once - at page load - though.
 
-3. Use the state store in your components. Learn more about this in [React Easy State](https://github.com/solkimicreb/react-easy-state).
+### setPath(array)
 
-```js
-import React, { Component } from 'react'
-import { easyComp } from 'react-easy-state'
-import store from './store'
-
-class Hello extends Component {
-  onChange (ev) {
-    store.name = ev.target.value  
-  }
-
-  render () {
-    return (
-      <div>
-        <input value={store.name} onChange={this.onChange} />
-        <div>Hello {store.name}!</div>
-      </div>
-    )
-  }
-}
-
-export default easyComp(Hello)
-```
-
-4. The view, the URL and the browser history will be auto-synchronized on user input, browser navigation and page shares - for example.
-
-`easyParams(store, config)` requires two parameters. A store - returned by `easyStore` - and a config object. The config object must have the following structure.
-
-```js
-easyParams(store, {
-  prop1: 'url',
-  prop2: ['url', 'history', 'storage']
-})
-```
-
-`prop1` and `prop2` are properties of the store - which will be two-way synchronized with the URL, history and LocalStorage. Config values for properties the must be one of: `url`, `history` and `storage` - or an array of them in any combination. The order inside the array doesn't matter.
-
-- `url` two-synchronizes the store property with the URL query string. The store property can be a `string`, `number`, `boolean` or `Date` instance.
-
-- `history` adds a new history item when the store property changes. Only one history item is added between two frames and history items are never added before the page fully loads. The store property can be a `string`, `number`, `boolean` or `Date` instance.
-
-- `storage` two-synchronizes the store property with the LocalStorage. The store property can be a `string`, `number`, `boolean`, `Date` instance, `array` or `object`.
-
-The URL query and LocalStorage stores everything as strings. The type of store properties are inferred from their current type - and casted to match them - on synchronization.
-
-### routeParams
-
-`routeParams(obj)` distributes the passed parameters between the stores - based on their `easyParams` configs - and updates the URL, history and LocalStorage to match them.
-
-```js
-import { easyStore } from 'react-easy-state'
-import { easyParams, routeParams } from 'react-easy-params'
-
-const owner = easyStore({
-  name: 'Bob'
-})
-const dog = easyStore({
-  breed: 'Bulldog'
-})
-easyParams(owner, {
-  name: ['url', 'history']
-})
-easyParams(dog, {
-  breed: 'url'
-})
-
-// this sets owner.name to 'Dave' and dog.breed to 'Pug',
-// updates the url query to '?name=Dave&breed=Pug'
-// and adds a new history item, because 'name' changed
-routeParams({
-  name: 'Dave',
-  breed: 'Pug'
-})
-```
-
-This is a low level function, you probably won't need to use it in your apps.
-
-### getParams
-
-`const params = getParams(array)` collects the parameters from the state stores for the passed array of keys and merges them in a single object.
-
-```js
-import { easyStore } from 'react-easy-state'
-import { easyParams, getParams } from 'react-easy-params'
-
-const owner = easyStore({
-  name: 'Bob'
-})
-const dog = easyStore({
-  breed: 'Bulldog'
-})
-
-easyParams(owner, {
-  name: ['url', 'history']
-})
-easyParams(dog, {
-  breed: 'url'
-})
-
-// this returns { owner: 'Bob', breed: 'Bulldog' }
-const params = getParams(['owner', 'breed'])
-```
-
-This is a low level function, you probably won't need to use it in your apps.
+Replaces the current `path` with the passed array. You should generally mutate `path` directly instead.
 
 ## Examples with live demos
 
-- [TodoMVC](https://solkimicreb.github.io/react-easy-params/examples/todoMVC/dist) ([source](/examples/todoMVC/))
+*Beginner*
+
+- [Feature Demo](https://solkimicreb.github.io/react-easy-params/examples/feature-demo/build) ([source](/examples/feature-demo/)) ([codesandbox](https://codesandbox.io/s/github/solkimicreb/react-easy-params/tree/master/examples/feature-demo)): a dummy project, which demonstrates the URL synchronization of `params` and `path`.
+
+*Advanced*
+
+- [TodoMVC](https://solkimicreb.github.io/react-easy-params/examples/todo-mvc/build) ([source](/examples/todo-mvc/)) ([codesandbox](https://codesandbox.io/s/github/solkimicreb/react-easy-params/tree/master/examples/todo-mvc)): a dummy project, which demonstrates the URL synchronization of `params` and `path`.
+- [Beer Finder](https://solkimicreb.github.io/react-easy-params/examples/beer-finder/build) ([source](/examples/beer-finder/)) ([codesandbox](https://codesandbox.io/s/github/solkimicreb/react-easy-params/tree/master/examples/beer-finder)): a dummy project, which demonstrates the URL synchronization of `params` and `path`.
+
+## Relation with [React Easy State](https://github.com/solkimicreb/react-easy-params)
+
+`params`, `path` and `storage` are Easy State [stores](https://github.com/solkimicreb/react-easy-state#creating-stores). If you use them inside your components, they re-render the component on their mutations - to reflect the changes. On top of this they are also reflected in the corresponding browser API.
 
 ## Platform support
 
@@ -215,8 +122,9 @@ This is a low level function, you probably won't need to use it in your apps.
 - Safari: 10 and above
 - Edge: 12 and above
 - Opera: 36 and above
-- React native is not yet supported
 - IE is not supported
+
+*This library is based on non polyfillable ES6 Proxies. Because of this, it will never support IE.*
 
 ## Alternative builds
 

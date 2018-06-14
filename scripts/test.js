@@ -39,9 +39,11 @@ const config = {
         'process.env.NODE_ENV': JSON.stringify('development')
       })
     ],
-    format: 'iife',
-    name: 'reactEasyParams',
-    sourcemap: 'inline'
+    output: {
+      format: 'iife',
+      name: 'reactEasyParams',
+      sourcemap: 'inline'
+    }
   },
   coverageReporter: {
     dir: 'coverage',

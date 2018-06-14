@@ -7,8 +7,8 @@ const alias = require('rollup-plugin-alias')
 const replace = require('rollup-plugin-replace')
 const TestServer = require('karma').Server
 
-const bundleType = process.env.BUNDLE_TYPE
-const bundlePath = bundleType ? `dist/${bundleType}.js` : 'src/index.js'
+const bundle = process.env.BUNDLE
+const bundlePath = bundle ? `dist/${bundle}` : 'src/index.js'
 
 const config = {
   frameworks: ['mocha', 'chai', 'source-map-support'],

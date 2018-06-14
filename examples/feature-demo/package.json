@@ -7,7 +7,7 @@
     "@nx-js/observer-util": "^4.1.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
-    "react-easy-params": "^2.0.0",
+    "react-easy-params": "^2.0.2",
     "react-easy-state": "^5.0.0",
     "react-scripts": "1.1.1"
   },

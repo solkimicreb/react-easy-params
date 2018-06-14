@@ -8,8 +8,8 @@ describe('params synchronization', () => {
   })
 
   it('should initialize from the query params', () => {
-    expect(params).to.eql({ page: 12, limit: '' })
-    expect(location.search).to.eql('?page=12&limit=%22%22')
+    expect(params).to.eql({ page: 12, sort: 'name', limit: '' })
+    expect(location.search).to.eql('?page=12&sort=%22name%22&limit=%22%22')
   })
 
   it('should sync the query params with the params object', async () => {

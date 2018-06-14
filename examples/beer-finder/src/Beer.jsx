@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { view, store } from 'react-easy-state'
-import Card, { CardContent, CardMedia } from 'material-ui/Card'
+import Card from '@material-ui/core/Card'
+import CardContent from '@material-ui/core/CardContent'
+import CardMedia from '@material-ui/core/CardMedia'
 
 class Beer extends Component {
   store = store({ details: false });

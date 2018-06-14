@@ -2,7 +2,7 @@ import React from 'react'
 import { view } from 'react-easy-state'
 import { params } from 'react-easy-params'
 import SearchBar from 'material-ui-search-bar'
-import { LinearProgress } from 'material-ui/Progress'
+import LinearProgress from '@material-ui/core/LinearProgress'
 import appStore from './appStore'
 
 const onChange = filter => (params.filter = filter)

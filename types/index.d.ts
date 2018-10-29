@@ -8,10 +8,5 @@ declare module 'react-easy-params' {
   }
 
   const storage:  ObjectObject
-  const params: PrimitiveObject
-  const path: Array<primitive>
-
-  function setParams(obj: PrimitiveObject): void
-  function setStorage(obj: ObjectObject): void
-  function setPath(array: Array<primitive>): void
+  const url:  ObjectObject
 }

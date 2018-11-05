@@ -1,25 +1,51 @@
 import { observable, observe } from '@nx-js/observer-util'
 import scheduler from './scheduler'
-import { toQuery, toParams, toPathArray, toPathString } from './utils'
 
-export const params = observable(toParams(location.search))
-export const path = observable(toPathArray(location.pathname))
+export const url = observable(createUrl())
 
-export function setParams (newParams) {
-  for (let key of Object.keys(params)) {
-    delete params[key]
+const unWritableKeys = ['origin', 'searchParams']
+
+observe(syncUrl, { scheduler })
+
+function createUrl (href = location.href) {
+  const url = new URL(href)
+  const ret = {}
+  for (const key in url) {
+    ret[key] = url[key]
   }
-  Object.assign(params, newParams)
+  ret.params = createParams(url.searchParams)
+  return ret
 }
 
-export function setPath (newPath) {
-  path.length = 0
-  path.push(...newPath)
+function createParams (searchParams) {
+  /* Convert URLSearchParams object into plain key-value object */
+  return Array.from(searchParams.entries()).reduce((params, [key, value]) => ({
+    ...params,
+    [key]: value
+  }), {})
+}
+
+function updateParams (params, searchParams) {
+  /* Update the URLSearchParams object from plain key-value object */
+  for (const key in params) {
+    searchParams.set(key, params[key])
+  }
+}
+
+function updateUrl (oldUrl, href = oldUrl.href) {
+  const newUrl = new URL(href)
+  for (const key in newUrl) {
+    if (unWritableKeys.includes(key)) continue
+    newUrl[key] = oldUrl[key]
+    /* URL does internal adjustments, like automatically add "#" to .hash (even if the user hadn't) */
+    /* So the updated properties need to be copied back for consistency and expected behaviour */
+    oldUrl[key] = newUrl[key]
+  }
+  updateParams(oldUrl.params, newUrl.searchParams)
+  return createUrl(newUrl.href)
 }
 
 function syncUrl () {
-  const url = toPathString(path) + toQuery(params) + location.hash
-  history.replaceState(history.state, '', url)
+  const newUrl = updateUrl(url)
+  history.replaceState(history.state, '', newUrl.href)
 }
-
-observe(syncUrl, { scheduler })
